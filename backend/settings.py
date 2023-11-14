@@ -12,6 +12,9 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 from pathlib import Path
 import environ
+import os
+
+os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "backend/credentials.json"
 
 env = environ.Env()
 environ.Env.read_env()

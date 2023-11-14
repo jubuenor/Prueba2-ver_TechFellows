@@ -14,7 +14,6 @@ class QueryController():
                 "data": data
             }
             return Response(content, status=status.HTTP_201_CREATED)
-
         except (Exception):
             return Response('Error: ' + Exception, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
@@ -40,7 +39,6 @@ class QueryController():
                 "data": data
             }
             return Response(content, status=status.HTTP_200_OK)
-
         except (Exception):
             return Response('Error: ' + Exception, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
@@ -53,7 +51,6 @@ class QueryController():
                 "data": data
             }
             return Response(content, status=status.HTTP_200_OK)
-
         except (Exception):
             return Response('Error: ' + Exception, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
@@ -66,6 +63,17 @@ class QueryController():
                 "data": data
             }
             return Response(content, status=status.HTTP_200_OK)
+        except (Exception):
+            return Response('Error: ' + Exception, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+    @api_view(["POST"])
+    def checkQuery(request):
+        try:
+            data = QueryServices.checkQuery(request.data)
+            content = {
+                "message": 'Query successfully checked!',
+                "data": data
+            }
+            return Response(content, status=status.HTTP_200_OK)
         except (Exception):
             return Response('Error: ' + Exception, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

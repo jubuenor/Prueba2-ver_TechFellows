@@ -2,6 +2,9 @@ from django.db import models
 
 # Create your models here.
 
+# Eliminar user y query_comment?
+# Cambiar comment de Comment por title y agregar description?
+
 
 class User(models.Model):
     id = models.AutoField(primary_key=True)
