@@ -1,29 +1,34 @@
 import React, { useState } from "react";
 import { Form, Row, Col, Button } from "react-bootstrap";
-import { countries } from "@/utils/countries";
+import { series } from "@/utils/series";
 import { AiOutlineClear } from "react-icons/ai";
 
-function CountrySelector() {
-  const [selectedCountries, setSelectedCountries] = useState<string[]>([]);
-  const [displayedCountries, setDisplayedCountries] = useState(countries);
+function SerieSelector({
+  selectedSeries,
+  setSelectedSeries,
+}: {
+  selectedSeries: string[];
+  setSelectedSeries: React.Dispatch<React.SetStateAction<string[]>>;
+}) {
+  const [displayedSeries, setDisplayedSeries] = useState(series);
 
-  const renderCountries = displayedCountries.map((country, index) => (
-    <Col xs={6} sm={2} xl={1} key={index}>
+  const renderSeries = displayedSeries.map((serie, index) => (
+    <Col xs={12} sm={3} xl={2} key={index}>
       <Form.Check
         inline
         type="checkbox"
-        id={country.country_code}
-        label={country.short_name}
-        checked={selectedCountries.includes(country.country_code)}
+        id={serie.series_code}
+        label={serie.indicator_name}
+        checked={selectedSeries.includes(serie.series_code)}
         onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
           const { checked } = event.target;
           if (checked) {
-            setSelectedCountries([...selectedCountries, country.country_code]);
+            setSelectedSeries([...selectedSeries, serie.series_code]);
           } else {
-            const filteredCountries = selectedCountries.filter(
-              (selectedCountry) => selectedCountry !== country.country_code
+            const filteredSeries = selectedSeries.filter(
+              (selectedSerie) => selectedSerie !== serie.series_code
             );
-            setSelectedCountries(filteredCountries);
+            setSelectedSeries(filteredSeries);
           }
         }}
       ></Form.Check>
@@ -32,15 +37,15 @@ function CountrySelector() {
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
-    const filteredCountries = countries.filter((country) =>
-      country.short_name.toLowerCase().includes(value.toLowerCase())
+    const filteredSeries = series.filter((serie) =>
+      serie.indicator_name.toLowerCase().includes(value.toLowerCase())
     );
-    setDisplayedCountries(filteredCountries);
+    setDisplayedSeries(filteredSeries);
   };
 
   const handleClearSelection = () => {
-    setSelectedCountries([]);
-    setDisplayedCountries(countries);
+    setSelectedSeries([]);
+    setDisplayedSeries(series);
   };
   return (
     <div>
@@ -48,7 +53,7 @@ function CountrySelector() {
         <Form.Group className="w-100">
           <Form.Control
             type="text"
-            placeholder="Enter country"
+            placeholder="Enter serie"
             onChange={handleChange}
           ></Form.Control>
         </Form.Group>
@@ -62,10 +67,10 @@ function CountrySelector() {
         </Button>
       </div>
       <Row className="gx-0 mt-3 overflow-auto" style={{ maxHeight: "300px" }}>
-        {renderCountries}
+        {renderSeries}
       </Row>
     </div>
   );
 }
 
-export default CountrySelector;
+export default SerieSelector;
