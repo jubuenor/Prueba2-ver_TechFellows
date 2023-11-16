@@ -1,8 +1,14 @@
 import React from "react";
 import CreateQuery from "@/components/CreateQuery";
+import NavbarComponent from "@/components/Navbar";
 
 function create() {
-  return <CreateQuery></CreateQuery>;
+  return (
+    <>
+      <NavbarComponent></NavbarComponent>
+      <CreateQuery></CreateQuery>
+    </>
+  );
 }
 
 export default create;
