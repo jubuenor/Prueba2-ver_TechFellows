@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import CountrySelector from "./CountrySelector";
 import SerieSelector from "./SerieSelector";
 import YearSelector from "./YearSelector";
@@ -15,43 +15,6 @@ import Loading from "../Loading";
 import { Results } from "@/types/query";
 import ChartVisualizer from "./ChartVisualizer";
 
-const countries = ["CHL", "CHN", "COL"];
-const series = ["BAR.NOED.1519.ZS", "BAR.NOED.15UP.FE.ZS"];
-const years = [2004, 2005, 2007, 2010, 2011];
-
-const results2: Results = {
-  CHL: {
-    "BAR.NOED.1519.ZS": {
-      2010: 1.42,
-      2005: 2.72,
-    },
-    "BAR.NOED.15UP.FE.ZS": {
-      2010: 3.63,
-      2005: 2.74,
-    },
-  },
-  CHN: {
-    "BAR.NOED.1519.ZS": {
-      2010: 0.47,
-      2005: 0.49,
-    },
-    "BAR.NOED.15UP.FE.ZS": {
-      2010: 7.9,
-      2005: 11.64,
-    },
-  },
-  COL: {
-    "BAR.NOED.1519.ZS": {
-      2010: 0.36,
-      2005: 0.5,
-    },
-    "BAR.NOED.15UP.FE.ZS": {
-      2010: 3.68,
-      2005: 7.56,
-    },
-  },
-};
-
 function QueryMaker() {
   const [selectedCountries, setSelectedCountries] = useState<string[]>([]);
   const [selectedSeries, setSelectedSeries] = useState<string[]>([]);
@@ -60,16 +23,15 @@ function QueryMaker() {
     years: [],
   });
   const [loading, setLoading] = useState<boolean>(false);
-  const [results, setResults] = useState<Results>(results2);
+  const [results, setResults] = useState<Results>({});
   const [query, setQuery] = useState<string>("");
 
   const runQueryMutation = useMutation({
     mutationFn: checkQuery,
-    onSuccess: (data) => {
+    onSuccess: (response) => {
+      setQuery(response.data.query);
+      setResults(response.data.results);
       setLoading(false);
-      console.log(data);
-      setQuery(data.data.query);
-      setResults(data.data.results);
     },
     onError: (error) => {
       setLoading(false);
@@ -79,9 +41,6 @@ function QueryMaker() {
 
   const handleRunQuery = () => {
     setLoading(true);
-    setQuery("asdadas");
-    setLoading(false);
-    return;
     runQueryMutation.mutate({
       countries: selectedCountries,
       series: selectedSeries,
@@ -211,9 +170,10 @@ function QueryMaker() {
           <div>
             <ChartVisualizer
               results={results}
-              years={years}
-              countries={countries}
-              series={series}
+              years={selectedYears.years}
+              countries={selectedCountries}
+              series={selectedSeries}
+              query={query}
             ></ChartVisualizer>
           </div>
         )}

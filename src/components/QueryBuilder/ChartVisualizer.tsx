@@ -30,13 +30,15 @@ function ChartVisualizer({
   countries,
   series,
   years,
+  query,
 }: {
   results: Results;
   countries: string[];
   series: string[];
   years: number[];
+  query: string;
 }) {
-  const [selectedCountry, setSelectedCountry] = useState<string>("CHL");
+  const [selectedCountry, setSelectedCountry] = useState<string>(countries[0]);
   const [data, setData] = useState<{ label: string; data: number[] }[]>([
     { label: "", data: [] },
   ]);
@@ -83,7 +85,7 @@ function ChartVisualizer({
         <Bar data={{ labels: years, datasets: data }} options={options} />
       </Col>
       <Col md={6}>
-        <PostQuery></PostQuery>
+        <PostQuery query={query}></PostQuery>
       </Col>
     </Row>
   );

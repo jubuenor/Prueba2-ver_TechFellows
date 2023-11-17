@@ -1,6 +1,5 @@
 import { Spinner } from "react-bootstrap";
 import styles from "@/styles/loading.module.css";
-import Image from "next/image";
 import { SiGitbook } from "react-icons/si";
 
 function Loading() {

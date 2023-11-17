@@ -1,35 +1,52 @@
 import React, { useState, useEffect } from "react";
 import { Form, Button } from "react-bootstrap";
-import { PostCreate } from "@/types/post";
-import { setUsername, getUsername } from "@/pages/api/Token";
+import { Query } from "@/types/query";
+import { getUsernameCookie } from "@/pages/api/Token";
 import Loading from "../Loading";
+import RegisterUsernameModal from "../RegisterUsernameModal";
+import { useMutation } from "react-query";
+import { saveQuery } from "@/pages/api/Query";
 
-function PostQuery() {
+function PostQuery({ query }: { query: string }) {
   const [loading, setLoading] = useState<boolean>(false);
-  const [usernameToken, setUsernameToken] = useState<string>("");
   const [validated, setValidated] = useState(false);
-  const [formData, setFormData] = useState<PostCreate>({
+  const [formData, setFormData] = useState<Query>({
     username: "",
     title: "",
     description: "",
-    query: "",
+    query: query,
+    date: "",
+  });
+  const [showModal, setShowModal] = useState<boolean>(false);
+  const handleCloseModal = () => setShowModal(false);
+  const handleShowModal = () => setShowModal(true);
+
+  const saveQueryMutation = useMutation({
+    mutationFn: saveQuery,
+    onSuccess: (response) => {
+      setLoading(false);
+    },
+    onError: (error) => {
+      setLoading(false);
+      console.log(error);
+    },
   });
 
-  useEffect(() => {
-    setUsernameToken(getUsername());
-    setFormData({ ...formData, username: getUsername() });
-  }, [getUsername()]);
-
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    setLoading(true);
-    const form = event.currentTarget;
     event.preventDefault();
     event.stopPropagation();
-    if (form.reportValidity() === false) {
-    } else {
-      setUsername(formData.username);
-      setLoading(false);
-    }
+
+    if (getUsernameCookie() === "") {
+      handleShowModal();
+      return;
+    } else formData.username = getUsernameCookie();
+
+    const form = event.currentTarget;
+    setLoading(true);
+
+    if (form.reportValidity()) {
+      saveQueryMutation.mutate(formData);
+    } else setLoading(false);
 
     setValidated(true);
   };
@@ -40,30 +57,15 @@ function PostQuery() {
 
   return (
     <>
+      <RegisterUsernameModal
+        show={showModal}
+        handleClose={handleCloseModal}
+      ></RegisterUsernameModal>
       {loading ? <Loading></Loading> : null}
       <div className="ms-5">
         <h1>!Post your Query!</h1>
         <p>Share with other users your queries</p>
         <Form noValidate validated={validated} onSubmit={handleSubmit}>
-          {usernameToken === "" ? (
-            <Form.Group className="mb-3">
-              <Form.Label>Username</Form.Label>
-              <Form.Control
-                required
-                type="text"
-                placeholder="Enter username"
-                name="username"
-                onChange={handleChange}
-                formNoValidate={false}
-                pattern=".{3,}"
-              />
-              <Form.Control.Feedback type="invalid">
-                Username must be at least 3 characters long
-              </Form.Control.Feedback>
-            </Form.Group>
-          ) : (
-            <p>Your username is {formData.username}</p>
-          )}
           <Form.Group className="mb-3">
             <Form.Label>Query Title</Form.Label>
             <Form.Control

@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Form, Row, Col, Button } from "react-bootstrap";
-import { countries } from "@/utils/countries";
 import { AiOutlineClear } from "react-icons/ai";
+import { useGlobalStore } from "@/pages/api/Global";
 
 function CountrySelector({
   selectedCountries,
@@ -10,23 +10,32 @@ function CountrySelector({
   selectedCountries: string[];
   setSelectedCountries: React.Dispatch<React.SetStateAction<string[]>>;
 }) {
-  const [displayedCountries, setDisplayedCountries] = useState(countries);
+  const countries = useGlobalStore((state) => state.data?.countries ?? {});
+  console.log(countries);
+
+  const [displayedCountries, setDisplayedCountries] = useState<string[]>(
+    Object.keys(countries)
+  );
+
+  useEffect(() => {
+    setDisplayedCountries(Object.keys(countries));
+  }, [countries]);
 
   const renderCountries = displayedCountries.map((country, index) => (
     <Col xs={6} sm={2} xl={1} key={index}>
       <Form.Check
         inline
         type="checkbox"
-        id={country.country_code}
-        label={country.short_name}
-        checked={selectedCountries.includes(country.country_code)}
+        id={country}
+        label={countries[country]}
+        checked={selectedCountries.includes(country)}
         onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
           const { checked } = event.target;
           if (checked) {
-            setSelectedCountries([...selectedCountries, country.country_code]);
+            setSelectedCountries([...selectedCountries, country]);
           } else {
             const filteredCountries = selectedCountries.filter(
-              (selectedCountry) => selectedCountry !== country.country_code
+              (selectedCountry) => selectedCountry !== country
             );
             setSelectedCountries(filteredCountries);
           }
@@ -37,15 +46,15 @@ function CountrySelector({
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
-    const filteredCountries = countries.filter((country) =>
-      country.short_name.toLowerCase().includes(value.toLowerCase())
+    const filteredCountries = Object.keys(countries).filter((country) =>
+      countries[country].toLowerCase().includes(value.toLowerCase())
     );
     setDisplayedCountries(filteredCountries);
   };
 
   const handleClearSelection = () => {
     setSelectedCountries([]);
-    setDisplayedCountries(countries);
+    setDisplayedCountries(Object.keys(countries));
   };
   return (
     <div>

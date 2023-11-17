@@ -11,3 +11,11 @@ export interface Results {
     [serie: string]: { [year: number]: number };
   };
 }
+
+export interface Query {
+  username: string;
+  title: string;
+  query: string;
+  description: string;
+  date: string | undefined | null;
+}
