@@ -1,11 +1,5 @@
 from rest_framework import serializers
-from prueba2db.models import User, Query, Comment, Query_Comment
-
-
-class UserSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        fields = '__all__'
+from prueba2db.models import Query, Comment, Query_Comment
 
 
 class QuerySerializer(serializers.ModelSerializer):
