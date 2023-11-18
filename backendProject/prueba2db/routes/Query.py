@@ -1,6 +1,10 @@
 from django.urls import path
 from prueba2db.controllers.Query import QueryController
 
+# **
+# * @description Routes of the Query
+# **
+
 urlpatterns = [
     path('query/getAll', QueryController.getAll),
     path('query/create', QueryController.create),

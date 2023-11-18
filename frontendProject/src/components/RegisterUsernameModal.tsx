@@ -7,6 +7,9 @@ import MessageComponent from "./MessageModal";
 import { setUsernameCookie } from "@/pages/api/Token";
 import Loading from "./Loading";
 
+// Functional component that renders the RegisterUsernameModal component
+// show is a boolean to show or hide the modal
+// handleClose is the function to close the modal
 function RegisterUsernameModal({
   show,
   handleClose,
@@ -25,9 +28,11 @@ function RegisterUsernameModal({
   const handleCloseMessage = () => setShowMessage(false);
   const handleShowMessage = () => setShowMessage(true);
 
+  // Mutation to set up the username
   const setUpUsernameMutation = useMutation({
     mutationFn: setUpUsername,
     onSuccess: (response) => {
+      // Set the username cookie and show a success message
       setUsernameCookie(response.data);
       setMessageOptions({
         type: "success",
@@ -42,17 +47,20 @@ function RegisterUsernameModal({
     },
   });
 
+  // Handle the submit of the form
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     event.stopPropagation();
     const form = event.currentTarget;
     setLoading(true);
+    // If the form is valid, set up the username
     if (form.checkValidity()) {
       setUpUsernameMutation.mutate(username);
     } else setLoading(false);
     setValidated(true);
   };
 
+  // Render the component
   return (
     <>
       {loading && <Loading></Loading>}

@@ -2,6 +2,7 @@ import axios from "axios";
 import { QueryCreate, Results, Query } from "@/types/query";
 import cookie from "js-cookie";
 
+// Function to check the query
 export function checkQuery(query: QueryCreate) {
   const BASE_URL = process.env.BASE_URL ?? "http://localhost:8000";
   const token = cookie.get("username");
@@ -19,6 +20,7 @@ export function checkQuery(query: QueryCreate) {
     .then((res) => res.data);
 }
 
+// Function to save the query in the backend
 export function saveQuery(query: Query) {
   const BASE_URL = process.env.BASE_URL ?? "http://localhost:8000";
   const token = cookie.get("username");
@@ -33,6 +35,7 @@ export function saveQuery(query: Query) {
     .then((res) => res.data);
 }
 
+// Function to get all queries from the backend
 export function getAllQueries() {
   const BASE_URL = process.env.BASE_URL ?? "http://localhost:8000";
   return axios

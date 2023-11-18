@@ -5,9 +5,19 @@ import json
 
 client = bigquery.Client()
 
+# **
+# * Class QueryServices
+# * @description Class that manages the requests to the Query table
+# **
+
 
 class QueryServices():
 
+    # **
+    # * @description Method to create a Query
+    # * @param query Query to create
+    # * @return Query created
+    # **
     def create(query):
         query = Query(query=query['query'], description=query['description'],
                       title=query['title'], username=query['username'])
@@ -15,17 +25,32 @@ class QueryServices():
         serializer = QuerySerializer(query, many=False)
         return serializer.data
 
+    # **
+    # * @description Method to get all the Queries
+    # * @return Queries
+    # **
     def getAll():
-        queries = Query.objects.all()
+        queries = Query.objects.all().order_by('-date')
         serializer = QuerySerializer(queries, many=True)
         return serializer.data
 
+    # **
+    # * @description Method to get a Query by id
+    # * @param query_id Id of the Query to get
+    # * @return Query
+    # **
     def get(query_id):
         query = Query.objects.get(id=query_id)
         if query is None:
             raise Exception('Query does not exist!')
         serializer = QuerySerializer(query, many=False)
         return serializer.data
+    # **
+    # * @description Method to update a Query
+    # * @param query_id Id of the Query to update
+    # * @param query Query to update
+    # * @return Query updated
+    # **
 
     def update(query_id, query):
         queryDB = Query.objects.get(id=query_id)
@@ -38,6 +63,11 @@ class QueryServices():
         else:
             raise Exception(serializer.errors)
         return serializer.data
+    # **
+    # * @description Method to delete a Query
+    # * @param query_id Id of the Query to delete
+    # * @return Query deleted
+    # **
 
     def delete(query_id):
         queryDB = Query.objects.get(id=query_id)
@@ -48,16 +78,28 @@ class QueryServices():
         queryDB.delete()
         serializer = QuerySerializer(queryDB, many=False)
         return serializer.data
+    # **
+    # * @description Method to get the results of a Query
+    # * @param query Query to get the results
+    # * @return Results of the Query
+    # **
 
     def checkQuery(query):
+        # Check if query exists
+
         if query is None:
             raise Exception('Query does not exist!')
+
+        # Check if query is valid
+
         if query["countries"] is None:
             raise Exception('Countries does not exist!')
         if query["series"] is None:
             raise Exception('Series does not exist!')
         if query["years"] is None:
             raise Exception('Years does not exist!')
+
+        # Query format
 
         countries = '","'.join(query['countries'])
         series = '","'.join(query['series'])
@@ -72,6 +114,8 @@ class QueryServices():
             years = ' AND '.join(str(e) for e in years)
             yearsQuery = f"BETWEEN {years}"
 
+        # Create query for BigQuery
+
         QUERY = f"""
             SELECT country_code, indicator_code, year, value
             FROM bigquery-public-data.world_bank_intl_education.international_education
@@ -81,10 +125,12 @@ class QueryServices():
 
         results = {}
 
+        # Execute query
+
         query_job = client.query(QUERY)
         rows = query_job.result()
 
-        print(rows)
+        # Format results in a dictionary
 
         for row in rows:
             if row.country_code not in results:
@@ -93,41 +139,9 @@ class QueryServices():
                 results[row.country_code][row.indicator_code] = {}
             results[row.country_code][row.indicator_code][row.year] = row.value
 
+        # Return results
+
         return {
             "query": json.dumps(query),
             "results": results,
         }
-
-    def getCountries():
-        QUERY = """
-            SELECT DISTINCT country_code, short_name
-            FROM bigquery-public-data.world_bank_intl_education.country_summary
-            ORDER BY short_name
-            """
-
-        results = {}
-
-        query_job = client.query(QUERY)
-        rows = query_job.result()
-
-        for row in rows:
-            results[row.country_code] = row.country_name
-
-        return results
-
-    def getSeries():
-        QUERY = """
-            SELECT DISTINCT series_code, indicator_name
-            FROM bigquery-public-data.world_bank_intl_education.series_summary
-            ORDER BY indicator_name
-            """
-
-        results = {}
-
-        query_job = client.query(QUERY)
-        rows = query_job.result()
-
-        for row in rows:
-            results[row.indicator_code] = row.indicator_name
-
-        return results

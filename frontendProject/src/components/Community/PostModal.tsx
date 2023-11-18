@@ -11,6 +11,11 @@ import { getAllComments } from "@/pages/api/Comment";
 import { setQueryStorage } from "@/utils/storage";
 import PostComment from "./PostComment";
 
+// Functional component that renders a modal to view a query and its comments
+// show is a boolean that determines whether the modal is shown
+// handleClose is a function that closes the modal
+// query is the query that is being viewed
+// comments is an array of comments that is being viewed
 function BodyModal({
   show,
   handleClose,
@@ -24,11 +29,11 @@ function BodyModal({
 }) {
   const date = new Date(query.date ?? "");
   const [commentsData, setCommentsData] = useState<Comment[]>(comments);
-
+  // Update the commentsData when the comments prop changes
   useEffect(() => {
     setCommentsData(comments);
   }, [comments]);
-
+  // Push a comment to the commentsData array
   const pushComment = (comment: Comment) => {
     const newComments = [comment].concat(commentsData);
     setCommentsData(newComments);
@@ -47,7 +52,10 @@ function BodyModal({
         >
           <FaPlayCircle size={35} color="green" />
         </Link>
-        <Card.Title className="m-0">{query.title} </Card.Title>
+        <Card.Title className="m-0">
+          {query.title}{" "}
+          <span className="text-muted fs-6">by {query.username}</span>
+        </Card.Title>
       </Modal.Header>
       <Modal.Body>
         <span className="text-muted m-0 fs-6"> {date.toDateString()}</span>
@@ -69,7 +77,10 @@ function BodyModal({
     </Modal>
   );
 }
-
+// Functional component that renders a modal to view a query and its comments
+// show is a boolean that determines whether the modal is shown
+// handleClose is a function that closes the modal
+// query is the query that is being viewed
 function PostModal({
   show,
   handleClose,
@@ -79,8 +90,12 @@ function PostModal({
   handleClose: () => void;
   query: Query;
 }) {
+  // If query is undefined or query.id is undefined, return an empty div
   if (query === undefined || query.id === undefined) return <div></div>;
 
+  // Call the getAllComments API route
+  // If the query.id is an empty string, disable the query
+  // If the query.id is not an empty string, enable the query
   const {
     status,
     error,
@@ -95,6 +110,7 @@ function PostModal({
   if (status === "error") return <h1>{JSON.stringify(error)}</h1>;
   if (data === null || data === undefined) return <h1>Error</h1>;
 
+  // Render the BodyModal
   return (
     <BodyModal
       show={show}

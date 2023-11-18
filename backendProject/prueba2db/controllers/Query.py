@@ -3,8 +3,22 @@ from rest_framework.response import Response
 from prueba2db.services.Query import QueryServices
 from rest_framework import status
 
+# **
+# * Class QueryController
+# * @description Class that manages the requests to the Query table
+# **
+
 
 class QueryController():
+    # **
+    # * @description Method to create a new Query
+    # * @param request Request received from the view
+    # * @param username Username of the Query to be created
+    # * @param title Title of the Query to be created
+    # * @param query Query of the Query to be created
+    # * @param description Description of the Query to be created
+    # * @return Response with the result of the request
+    # **
     @api_view(["POST"])
     def create(request):
         try:
@@ -17,6 +31,11 @@ class QueryController():
         except (Exception):
             return Response('Error: ' + Exception, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+    # **
+    # * @description Method to get all the Queries
+    # * @param request Request received from the view
+    # * @return Response with the result of the request
+    # **
     @api_view(["GET"])
     def getAll(request):
         try:
@@ -29,6 +48,12 @@ class QueryController():
 
         except (Exception):
             return Response('Error: ' + Exception, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    # **
+    # * @description Method to get a Query by id
+    # * @param request Request received from the view
+    # * @param query_id Id of the Query to be retrieved
+    # * @return Response with the result of the request
+    # **
 
     @api_view(["GET"])
     def get(request, query_id):
@@ -41,6 +66,12 @@ class QueryController():
             return Response(content, status=status.HTTP_200_OK)
         except (Exception):
             return Response('Error: ' + Exception, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    # **
+    # * @description Method to update a Query
+    # * @param request Request received from the view
+    # * @param query_id Id of the Query to be updated
+    # * @return Response with the result of the request
+    # **
 
     @api_view(["PUT"])
     def update(request, query_id):
@@ -53,6 +84,12 @@ class QueryController():
             return Response(content, status=status.HTTP_200_OK)
         except (Exception):
             return Response('Error: ' + Exception, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    # **
+    # * @description Method to delete a Query
+    # * @param request Request received from the view
+    # * @param query_id Id of the Query to be deleted
+    # * @return Response with the result of the request
+    # **
 
     @api_view(["DELETE"])
     def delete(request, query_id):
@@ -65,6 +102,11 @@ class QueryController():
             return Response(content, status=status.HTTP_200_OK)
         except (Exception):
             return Response('Error: ' + Exception, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    # **
+    # * @description Method to check a Query
+    # * @param request Request received from the view
+    # * @return Response with the result of the request
+    # **
 
     @api_view(["POST"])
     def checkQuery(request):

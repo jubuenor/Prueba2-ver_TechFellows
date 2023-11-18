@@ -17,7 +17,9 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
-
+# **
+# * @description URL configuration for backend project
+# **
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include('prueba2db.routes.User')),

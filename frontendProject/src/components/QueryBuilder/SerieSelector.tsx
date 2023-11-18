@@ -3,6 +3,9 @@ import { Form, Row, Col, Button } from "react-bootstrap";
 import { AiOutlineClear } from "react-icons/ai";
 import { useGlobalStore } from "@/pages/api/Global";
 
+// Functional component that renders the SerieSelector component
+// selectedSeries is the list of selected series
+// setSelectedSeries is the function to set the selected series
 function SerieSelector({
   selectedSeries,
   setSelectedSeries,
@@ -17,11 +20,12 @@ function SerieSelector({
   const [displayedSeries, setDisplayedSeries] = useState<string[]>(
     Object.keys(series)
   );
-
+  // useEffect hook to update the displayed series when the series change
   useEffect(() => {
     setDisplayedSeries(Object.keys(series));
   }, [series]);
 
+  // Render the series
   const renderSeries = displayedSeries
     .slice(0, showAll ? displayedSeries.length : 100)
     .map((serie, index) => (
@@ -46,7 +50,7 @@ function SerieSelector({
         ></Form.Check>
       </Col>
     ));
-
+  // Handle the change in the input to filter the series
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     event.stopPropagation();
@@ -58,10 +62,13 @@ function SerieSelector({
     setDisplayedSeries(filteredSeries);
   };
 
+  // Handle the clear selection button to clear the selected series
   const handleClearSelection = () => {
     setSelectedSeries([]);
     setDisplayedSeries(Object.keys(series));
   };
+
+  // Render the component
   return (
     <div>
       <div className="d-flex justify-content-between">

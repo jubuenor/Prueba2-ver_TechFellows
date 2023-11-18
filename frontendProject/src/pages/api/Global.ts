@@ -1,7 +1,8 @@
 import { create } from "zustand";
 import axios from "axios";
-import { Data, Country, Serie } from "@/types/data";
+import { Data } from "@/types/data";
 
+// Function to get the data needed for the app
 export function getData() {
   const BASE_URL = process.env.BASE_URL ?? "http://localhost:8000";
   return axios
@@ -9,6 +10,7 @@ export function getData() {
     .then((res) => res.data);
 }
 
+// Function to set the data needed for the app
 export const useGlobalStore = create<{
   data: Data | null;
   setData: (data: Data) => void;

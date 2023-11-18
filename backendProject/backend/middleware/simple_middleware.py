@@ -9,11 +9,26 @@ environ.Env.read_env()
 
 private_methods = ['create', 'update', 'delete']
 
+# **
+# * @description Middleware to validate the token
+# * @param get_response Response from the request
+# * @return Response with the result of the request
+# **
+
 
 def simple_middleware(get_response):
-
+    # **
+    # * @description Method to validate the token
+    # * @param request Request received from the view
+    # * @return Response with the result of the request
+    # **
     def middleware(request):
 
+        # **
+        # * @description Method to validate if the request is private
+        # * @param request Request received from the view
+        # * @return Response with the result of the request
+        # **
         if (request.method not in private_methods):
             return get_response(request)
 

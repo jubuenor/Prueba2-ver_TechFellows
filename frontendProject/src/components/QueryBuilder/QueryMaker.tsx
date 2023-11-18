@@ -15,7 +15,9 @@ import { Results, Years } from "@/types/query";
 import ChartVisualizer from "./ChartVisualizer";
 import { getQueryStorage, removeQueryStorage } from "@/utils/storage";
 
+// Functional component that renders the QueryMaker component
 function QueryMaker() {
+  // States to store the selected countries, series, years, loading and results
   const [selectedCountries, setSelectedCountries] = useState<string[]>([]);
   const [selectedSeries, setSelectedSeries] = useState<string[]>([]);
   const [selectedYears, setSelectedYears] = useState<Years>({
@@ -26,6 +28,7 @@ function QueryMaker() {
   const [results, setResults] = useState<Results>({});
   const [query, setQuery] = useState<string>("");
 
+  // useEffect hook to load the query from the storage
   useEffect(() => {
     const query = getQueryStorage();
     if (query !== null) {
@@ -36,6 +39,7 @@ function QueryMaker() {
     }
   }, []);
 
+  // Mutation to check the query and get the results
   const runQueryMutation = useMutation({
     mutationFn: checkQuery,
     onSuccess: (response) => {
@@ -49,6 +53,7 @@ function QueryMaker() {
     },
   });
 
+  // Handle the run query button
   const handleRunQuery = () => {
     setLoading(true);
     runQueryMutation.mutate({
@@ -58,6 +63,7 @@ function QueryMaker() {
     });
   };
 
+  // Render the component
   return (
     <>
       {loading && <Loading></Loading>}

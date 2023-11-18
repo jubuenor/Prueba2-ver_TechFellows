@@ -2,6 +2,10 @@ import React from "react";
 import { Modal, Button } from "react-bootstrap";
 import { Message } from "@/types/message";
 
+// Functional component that renders the MessageModal component
+// options is the message to show and the type of message
+// show is a boolean to show or hide the modal
+// handleClose is the function to close the modal
 function Message({
   options,
   show,

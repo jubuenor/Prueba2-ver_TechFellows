@@ -17,6 +17,7 @@ import PostQuery from "./PostQuery";
 import { useGlobalStore } from "@/pages/api/Global";
 import ChartInfo from "./ChartInfo";
 
+// Register the plugins
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -26,7 +27,7 @@ ChartJS.register(
   Legend,
   Colors
 );
-
+// Functional component that renders the ChartVisualizer component
 function ChartVisualizer({
   results,
   countries,
@@ -40,12 +41,13 @@ function ChartVisualizer({
   years: number[];
   query: string;
 }) {
+  // Load the global data from the global store
   const globalData = useGlobalStore((state) => state.data);
   const [selectedCountry, setSelectedCountry] = useState<string>(countries[0]);
   const [data, setData] = useState<{ label: string; data: number[] }[]>([
     { label: "", data: [] },
   ]);
-
+  // Set the options for the chart
   const options = {
     responsive: true,
     plugins: {
@@ -58,12 +60,13 @@ function ChartVisualizer({
       },
     },
   };
+  // Render the countries select
   const renderCountries = countries.map((country, index) => (
     <option value={country} key={index}>
       {globalData?.countries[country]}
     </option>
   ));
-
+  // Set the data for the chart
   useEffect(() => {
     const newData = series.map((serie) => {
       return {
@@ -73,7 +76,7 @@ function ChartVisualizer({
     });
     setData(newData);
   }, [selectedCountry]);
-
+  // Render the series info
   const renderSeriesInfo = series.map((serie, index) => (
     <ChartInfo
       key={index}
@@ -81,7 +84,7 @@ function ChartVisualizer({
       description={globalData?.series[serie] ?? ""}
     ></ChartInfo>
   ));
-
+  // Render the component
   return (
     <Row className="gx-0">
       <Col md={6}>

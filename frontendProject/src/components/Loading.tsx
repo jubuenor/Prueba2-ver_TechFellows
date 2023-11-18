@@ -2,6 +2,7 @@ import { Spinner } from "react-bootstrap";
 import styles from "@/styles/loading.module.css";
 import { SiGitbook } from "react-icons/si";
 
+// Functional component that renders the Loading component
 function Loading() {
   return (
     <>

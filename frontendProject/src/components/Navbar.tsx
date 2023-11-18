@@ -7,19 +7,25 @@ import { FaUserPen } from "react-icons/fa6";
 import { getUsernameCookie, removeUsernameCookie } from "@/pages/api/Token";
 import { FaUserLargeSlash } from "react-icons/fa6";
 
+// Functional component that renders the Navbar component
 function NavbarComponent() {
   const [showRegisterUsername, setShowRegisterUsername] =
     useState<boolean>(false);
   const [username, setUsername] = useState<string>("");
+
+  // useEffect hook to update the username when the cookie changes
   useEffect(() => {
     setUsername(getUsernameCookie());
   }, [username]);
 
+  // Handle the close and show of the modal
   const handleClose = () => {
     setShowRegisterUsername(false);
     if (getUsernameCookie() !== "") setUsername(getUsernameCookie());
   };
   const handleShow = () => setShowRegisterUsername(true);
+
+  // Render the component
   return (
     <>
       <RegisterUsernameModal

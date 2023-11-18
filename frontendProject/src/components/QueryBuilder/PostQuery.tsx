@@ -7,6 +7,8 @@ import RegisterUsernameModal from "../RegisterUsernameModal";
 import { useMutation } from "react-query";
 import { saveQuery } from "@/pages/api/Query";
 
+// Functional component that renders the PostQuery component
+// query is the query to post
 function PostQuery({ query }: { query: string }) {
   const [loading, setLoading] = useState<boolean>(false);
   const [validated, setValidated] = useState(false);
@@ -20,6 +22,7 @@ function PostQuery({ query }: { query: string }) {
   const handleCloseModal = () => setShowModal(false);
   const handleShowModal = () => setShowModal(true);
 
+  // Mutation to save the query
   const saveQueryMutation = useMutation({
     mutationFn: saveQuery,
     onSuccess: (response) => {
@@ -31,10 +34,11 @@ function PostQuery({ query }: { query: string }) {
     },
   });
 
+  // Handle the submit of the form
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     event.stopPropagation();
-
+    // If the user is not logged in, show the modal to register a username
     if (getUsernameCookie() === "") {
       handleShowModal();
       return;
@@ -42,18 +46,18 @@ function PostQuery({ query }: { query: string }) {
 
     const form = event.currentTarget;
     setLoading(true);
-
+    // If the form is valid, save the query
     if (form.reportValidity()) {
       saveQueryMutation.mutate(formData);
     } else setLoading(false);
 
     setValidated(true);
   };
-
+  // Handle the change in the input
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [event.target.name]: event.target.value });
   };
-
+  // Render the component
   return (
     <>
       <RegisterUsernameModal
@@ -62,7 +66,7 @@ function PostQuery({ query }: { query: string }) {
       ></RegisterUsernameModal>
       {loading ? <Loading></Loading> : null}
       <div className="ms-5">
-        <h1>!Post your Query!</h1>
+        <h1>!Share your Query!</h1>
         <p>Share with other users your queries</p>
         <Form noValidate validated={validated} onSubmit={handleSubmit}>
           <Form.Group className="mb-3">
@@ -94,7 +98,7 @@ function PostQuery({ query }: { query: string }) {
               Description is required
             </Form.Control.Feedback>
           </Form.Group>
-          <Button type="submit">Post</Button>
+          <Button type="submit">Share</Button>
         </Form>
       </div>
     </>

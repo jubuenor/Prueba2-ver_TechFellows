@@ -8,6 +8,9 @@ import { AiOutlineClear } from "react-icons/ai";
 import { Years } from "@/types/query";
 import { initYear, finalYear } from "@/utils/years";
 
+// Functional component that renders the YearSelector component
+// selectedYears is the list of selected years
+// setSelectedYears is the function to set the selected years
 function YearSelector({
   selectedYears,
   setSelectedYears,
@@ -15,6 +18,7 @@ function YearSelector({
   selectedYears: Years;
   setSelectedYears: React.Dispatch<React.SetStateAction<Years>>;
 }) {
+  // Handle the change in the input when the user selects a range of years
   const handleSetRange = (newRange: number[]) => {
     setSelectedYears({
       manual: false,
@@ -22,6 +26,7 @@ function YearSelector({
     });
   };
 
+  // Render the years
   const renderYears = () => {
     return Array.from({ length: finalYear - initYear + 1 }, (_, i) => (
       <Form.Check
@@ -51,16 +56,20 @@ function YearSelector({
     ));
   };
 
+  // Handle the show manual button to show the slider
   const handleShowManual = () => {
     if (selectedYears.manual)
       setSelectedYears({ manual: false, years: [initYear, finalYear] });
     else setSelectedYears({ manual: true, years: [] });
   };
 
+  // Handle the clear selection button to clear the selected years
   const handleClearSelection = () => {
     if (selectedYears.manual) setSelectedYears({ manual: true, years: [] });
     else setSelectedYears({ manual: false, years: [initYear, finalYear] });
   };
+
+  // Render the component
   return (
     <div>
       <div className="d-flex justify-content-between">

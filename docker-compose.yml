@@ -1,0 +1,43 @@
+services:
+  prueba2-db:
+    image: postgres
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=prueba2
+    ports:
+      - 5432:5432
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  prueba2-back:
+    image: jubuenor/backend_prueba2
+    command: >
+      sh -c "python manage.py makemigrations &&
+             python manage.py migrate &&
+             python manage.py runserver 0.0.0.0:8000"
+    environment:
+      - SECRET_KEY=_IISKxfY6EP:j'4LDxNJz7Q9.W4Q|.h;5yvxlXO!+MArNaL!fz*(>_6Uy@Zl3.~
+      - DB_NAME=prueba2
+      - DB_USER=postgres
+      - DB_PASSWORD=postgres
+      - DB_HOST=prueba2-db
+      - DB_PORT=5432
+      - DB_TABLE="bigquery-public-data.world_bank_intl_education.international_education"
+    ports:
+      - 8000:8000
+    depends_on:
+      - prueba2-db
+
+  prueba2-front:
+    image: jubuenor/frontend_prueba2
+    environment:
+      - PORT =9000
+      - BASE_URL=http://localhost:8000
+      - SECRET_KEY=_IISKxfY6EP:j'4LDxNJz7Q9.W4Q|.h;5yvxlXO!+MArNaL!fz*(>_6Uy@Zl3.~
+    ports:
+      - 9000:9000
+    depends_on: 
+      - prueba2-back
+volumes:
+  pgdata:

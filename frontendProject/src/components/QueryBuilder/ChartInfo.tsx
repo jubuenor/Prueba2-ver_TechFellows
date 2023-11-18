@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { FaCircleInfo } from "react-icons/fa6";
 import { Card, Button, Collapse } from "react-bootstrap";
 
+// Functional component that renders the ChartInfo component
 function ChartInfo({
   serie,
   description,
@@ -9,6 +10,7 @@ function ChartInfo({
   serie: string;
   description: string;
 }) {
+  // useState hook to keep track of whether the collapse is open or not
   const [open, setOpen] = useState(false);
   return (
     <div className=" mb-3">

@@ -1,5 +1,7 @@
 import axios from "axios";
 
+// Function to get the username token from the backend
+
 export function setUpUsername(username: string) {
   const BASE_URL = process.env.BASE_URL ?? "http://localhost:8000";
   return axios

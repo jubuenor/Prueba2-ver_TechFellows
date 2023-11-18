@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import QueryMaker from "./QueryBuilder/QueryMaker";
 
+// Functional component that renders the QueryMaker component
 function CreateQuery() {
   return (
     <div className="p-5 ">

@@ -3,8 +3,18 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from prueba2db.services.Comment import CommentServices
 
+# **
+# * Class CommentController
+# * @description Class that manages the requests to the Comment table
+# **
+
 
 class CommentController():
+    # **
+    # * @description Method to create a new Comment
+    # * @param request Request received from the view
+    # * @return Response with the result of the request
+    # **
     @api_view(["POST"])
     def create(request, query_id):
         try:
@@ -18,6 +28,11 @@ class CommentController():
 
         except (Exception):
             return Response('Error: ' + Exception, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    # **
+    # * @description Method to get all the Comments
+    # * @param request Request received from the view
+    # * @return Response with the result of the request
+    # **
 
     @api_view(["GET"])
     def getAll(request, query_id):
@@ -30,6 +45,12 @@ class CommentController():
             return Response(content, status=status.HTTP_200_OK)
         except (Exception):
             return Response('Error: ' + Exception, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    # **
+    # * @description Method to get a Comment by id
+    # * @param request Request received from the view
+    # * @param comment_id Id of the Comment to be retrieved
+    # * @return Response with the result of the request
+    # **
 
     @api_view(["GET"])
     def get(request, comment_id):
@@ -42,6 +63,12 @@ class CommentController():
             return Response(content, status=status.HTTP_200_OK)
         except (Exception):
             return Response('Error: ' + Exception, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    # **
+    # * @description Method to update a Comment by id
+    # * @param request Request received from the view
+    # * @param comment_id Id of the Comment to be updated
+    # * @return Response with the result of the request
+    # **
 
     @api_view(["PUT"])
     def update(request, comment_id):
@@ -55,6 +82,12 @@ class CommentController():
         except (Exception):
             return Response('Error: ' + Exception, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+    # **
+    # * @description Method to delete a Comment by id
+    # * @param request Request received from the view
+    # * @param comment_id Id of the Comment to be deleted
+    # * @return Response with the result of the request
+    # **
     @api_view(["DELETE"])
     def delete(request, comment_id):
         try:
