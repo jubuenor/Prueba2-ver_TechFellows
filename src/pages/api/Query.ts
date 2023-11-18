@@ -32,3 +32,10 @@ export function saveQuery(query: Query) {
     .post<{ message: string }>(`${BASE_URL}/api/query/create`, query, config)
     .then((res) => res.data);
 }
+
+export function getAllQueries() {
+  const BASE_URL = process.env.BASE_URL ?? "http://localhost:8000";
+  return axios
+    .get<{ message: string; data: Query[] }>(`${BASE_URL}/api/query/getAll`)
+    .then((res) => res.data);
+}

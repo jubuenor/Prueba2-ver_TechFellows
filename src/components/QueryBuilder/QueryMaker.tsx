@@ -6,14 +6,14 @@ import { Accordion, Button } from "react-bootstrap";
 import { BiWorld } from "react-icons/bi";
 import { AiFillDatabase } from "react-icons/ai";
 import { BsCalendarWeek } from "react-icons/bs";
-import { Years } from "@/types/years";
 import { RiErrorWarningLine } from "react-icons/ri";
 import { BsFillCheckCircleFill } from "react-icons/bs";
 import { useMutation } from "react-query";
 import { checkQuery } from "@/pages/api/Query";
 import Loading from "../Loading";
-import { Results } from "@/types/query";
+import { Results, Years } from "@/types/query";
 import ChartVisualizer from "./ChartVisualizer";
+import { getQueryStorage, removeQueryStorage } from "@/utils/storage";
 
 function QueryMaker() {
   const [selectedCountries, setSelectedCountries] = useState<string[]>([]);
@@ -25,6 +25,16 @@ function QueryMaker() {
   const [loading, setLoading] = useState<boolean>(false);
   const [results, setResults] = useState<Results>({});
   const [query, setQuery] = useState<string>("");
+
+  useEffect(() => {
+    const query = getQueryStorage();
+    if (query !== null) {
+      setSelectedCountries(query.countries);
+      setSelectedSeries(query.series);
+      setSelectedYears(query.years);
+      removeQueryStorage();
+    }
+  }, []);
 
   const runQueryMutation = useMutation({
     mutationFn: checkQuery,
@@ -170,7 +180,16 @@ function QueryMaker() {
           <div>
             <ChartVisualizer
               results={results}
-              years={selectedYears.years}
+              years={
+                selectedYears.manual
+                  ? selectedYears.years
+                  : Array.from(
+                      {
+                        length: selectedYears.years[1] - selectedYears.years[0],
+                      },
+                      (value, index) => selectedYears.years[0] + index
+                    )
+              }
               countries={selectedCountries}
               series={selectedSeries}
               query={query}

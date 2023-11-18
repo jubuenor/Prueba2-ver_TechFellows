@@ -5,6 +5,23 @@ import { useGlobalStore } from "./api/Global";
 import { useQuery } from "react-query";
 import Loading from "@/components/Loading";
 import { getData } from "./api/Global";
+import { Data } from "@/types/data";
+
+function CreateQueryBody({ globalData }: { globalData: Data }) {
+  const GlobalData = useGlobalStore((state) => state.data);
+  const setGlobalData = useGlobalStore((state) => state.setData);
+  useEffect(() => {
+    if (GlobalData === null && globalData !== undefined)
+      setGlobalData(globalData);
+  }, [globalData]);
+  if (GlobalData === null) return <div></div>;
+  return (
+    <>
+      <NavbarComponent></NavbarComponent>
+      <CreateQuery></CreateQuery>
+    </>
+  );
+}
 
 function create() {
   const globalData = useGlobalStore((state) => state.data);
@@ -25,8 +42,7 @@ function create() {
 
   return (
     <>
-      <NavbarComponent globalData={data.data}></NavbarComponent>
-      <CreateQuery></CreateQuery>
+      <CreateQueryBody globalData={data.data}></CreateQueryBody>
     </>
   );
 }

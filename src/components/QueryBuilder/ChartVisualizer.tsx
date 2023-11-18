@@ -14,6 +14,8 @@ import { Bar } from "react-chartjs-2";
 import { Form, Col, Row } from "react-bootstrap";
 import { Results } from "@/types/query";
 import PostQuery from "./PostQuery";
+import { useGlobalStore } from "@/pages/api/Global";
+import ChartInfo from "./ChartInfo";
 
 ChartJS.register(
   CategoryScale,
@@ -38,6 +40,7 @@ function ChartVisualizer({
   years: number[];
   query: string;
 }) {
+  const globalData = useGlobalStore((state) => state.data);
   const [selectedCountry, setSelectedCountry] = useState<string>(countries[0]);
   const [data, setData] = useState<{ label: string; data: number[] }[]>([
     { label: "", data: [] },
@@ -57,7 +60,7 @@ function ChartVisualizer({
   };
   const renderCountries = countries.map((country, index) => (
     <option value={country} key={index}>
-      {country}
+      {globalData?.countries[country]}
     </option>
   ));
 
@@ -71,10 +74,19 @@ function ChartVisualizer({
     setData(newData);
   }, [selectedCountry]);
 
+  const renderSeriesInfo = series.map((serie, index) => (
+    <ChartInfo
+      key={index}
+      serie={serie}
+      description={globalData?.series[serie] ?? ""}
+    ></ChartInfo>
+  ));
+
   return (
     <Row className="gx-0">
       <Col md={6}>
         <Form.Select
+          className="mb-3"
           onChange={(event: React.ChangeEvent<HTMLSelectElement>) => {
             const value = event.target.value;
             setSelectedCountry(value);
@@ -83,6 +95,7 @@ function ChartVisualizer({
           {renderCountries}
         </Form.Select>
         <Bar data={{ labels: years, datasets: data }} options={options} />
+        <div className="mt-3">{renderSeriesInfo}</div>
       </Col>
       <Col md={6}>
         <PostQuery query={query}></PostQuery>

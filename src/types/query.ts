@@ -1,4 +1,10 @@
-import { Years } from "./years";
+export interface Years {
+  manual: boolean;
+  years: number[];
+}
+export interface Country {
+  [country_code: string]: string;
+}
 
 export interface QueryCreate {
   countries: string[];
@@ -13,9 +19,16 @@ export interface Results {
 }
 
 export interface Query {
+  id?: string;
   username: string;
   title: string;
   query: string;
   description: string;
-  date: string | undefined | null;
+  date?: string;
+}
+
+export interface QueryStorage {
+  countries: string[];
+  series: string[];
+  years: Years;
 }

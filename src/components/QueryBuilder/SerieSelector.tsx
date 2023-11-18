@@ -88,15 +88,13 @@ function SerieSelector({
       </div>
       <Row className="gx-0 mt-3 overflow-auto" style={{ maxHeight: "300px" }}>
         {renderSeries}
-        {showAll ? null : (
-          <Button
-            variant="link"
-            className="text-decoration-none"
-            onClick={() => setShowAll(true)}
-          >
-            Show more
-          </Button>
-        )}
+        <Button
+          variant="link"
+          className="text-decoration-none"
+          onClick={() => setShowAll(!showAll)}
+        >
+          {showAll ? "Show less" : "Show more"}
+        </Button>
       </Row>
     </div>
   );

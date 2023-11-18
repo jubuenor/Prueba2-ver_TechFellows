@@ -19,7 +19,7 @@ function Message({
             options.type === "success" ? "text-success" : "text-danger"
           }`}
         >
-          {options.type === "success" ? "Operación exitosa" : "Error"}
+          {options.type === "success" ? "Successful operation" : "Error"}
         </Modal.Title>
       </Modal.Header>
       <Modal.Body>{options.message}</Modal.Body>

@@ -11,7 +11,6 @@ function CountrySelector({
   setSelectedCountries: React.Dispatch<React.SetStateAction<string[]>>;
 }) {
   const countries = useGlobalStore((state) => state.data?.countries ?? {});
-  console.log(countries);
 
   const [displayedCountries, setDisplayedCountries] = useState<string[]>(
     Object.keys(countries)

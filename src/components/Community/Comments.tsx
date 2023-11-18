@@ -1,77 +1,23 @@
 import React from "react";
 import { ListGroup } from "react-bootstrap";
+import { Comment } from "@/types/comments";
 
-function Comments() {
-  return (
-    <ListGroup>
-      <ListGroup.Item>
+function Comments({ comments }: { comments: Comment[] }) {
+  if (!Array.isArray(comments)) return <div></div>;
+  const renderComments = comments.map((comment, index) => {
+    const date = new Date(comment.date ?? "");
+
+    return (
+      <ListGroup.Item key={index}>
         <p>
-          <strong>Test</strong>
+          <strong>{comment.username}</strong>
+          <span className="text-muted ms-3">{date.toDateString()}</span>
         </p>
-        <p className="m-0">
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptates
-          nihil nulla ducimus molestias vitae. Similique hic, molestias
-          voluptatibus placeat ducimus fuga voluptate, a reprehenderit, aut
-          tempore aliquam tenetur qui dignissimos.
-        </p>
+        <p className="m-0">{comment.comment}</p>
       </ListGroup.Item>
-      <ListGroup.Item>
-        <p>
-          <strong>Test</strong>
-        </p>
-        <p className="m-0">
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptates
-          nihil nulla ducimus molestias vitae. Similique hic, molestias
-          voluptatibus placeat ducimus fuga voluptate, a reprehenderit, aut
-          tempore aliquam tenetur qui dignissimos.
-        </p>
-      </ListGroup.Item>
-      <ListGroup.Item>
-        <p>
-          <strong>Test</strong>
-        </p>
-        <p className="m-0">
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptates
-          nihil nulla ducimus molestias vitae. Similique hic, molestias
-          voluptatibus placeat ducimus fuga voluptate, a reprehenderit, aut
-          tempore aliquam tenetur qui dignissimos.
-        </p>
-      </ListGroup.Item>
-      <ListGroup.Item>
-        <p>
-          <strong>Test</strong>
-        </p>
-        <p className="m-0">
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptates
-          nihil nulla ducimus molestias vitae. Similique hic, molestias
-          voluptatibus placeat ducimus fuga voluptate, a reprehenderit, aut
-          tempore aliquam tenetur qui dignissimos.
-        </p>
-      </ListGroup.Item>
-      <ListGroup.Item>
-        <p>
-          <strong>Test</strong>
-        </p>
-        <p className="m-0">
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptates
-          nihil nulla ducimus molestias vitae. Similique hic, molestias
-          voluptatibus placeat ducimus fuga voluptate, a reprehenderit, aut
-          tempore aliquam tenetur qui dignissimos.
-        </p>
-      </ListGroup.Item>
-      <ListGroup.Item>
-        <p>
-          <strong>Test</strong>
-        </p>
-        <p className="m-0">
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptates
-          nihil nulla ducimus molestias vitae. Similique hic, molestias
-          voluptatibus placeat ducimus fuga voluptate, a reprehenderit, aut
-          tempore aliquam tenetur qui dignissimos.
-        </p>
-      </ListGroup.Item>
-    </ListGroup>
-  );
+    );
+  });
+  return <ListGroup>{renderComments}</ListGroup>;
 }
 
 export default Comments;

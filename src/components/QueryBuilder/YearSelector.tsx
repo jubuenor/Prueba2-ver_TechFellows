@@ -5,7 +5,7 @@ import "react-range-slider-input/dist/style.css";
 import { RxSlider } from "react-icons/rx";
 import { BsHandIndex } from "react-icons/bs";
 import { AiOutlineClear } from "react-icons/ai";
-import { Years } from "@/types/years";
+import { Years } from "@/types/query";
 import { initYear, finalYear } from "@/utils/years";
 
 function YearSelector({

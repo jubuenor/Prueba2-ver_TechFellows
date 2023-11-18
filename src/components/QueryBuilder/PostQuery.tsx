@@ -15,7 +15,6 @@ function PostQuery({ query }: { query: string }) {
     title: "",
     description: "",
     query: query,
-    date: "",
   });
   const [showModal, setShowModal] = useState<boolean>(false);
   const handleCloseModal = () => setShowModal(false);
