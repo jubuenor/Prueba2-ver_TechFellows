@@ -6,9 +6,9 @@ from prueba2db.services.Comment import CommentServices
 
 class CommentController():
     @api_view(["POST"])
-    def create(request):
+    def create(request, query_id):
         try:
-            data = CommentServices.create(request.data)
+            data = CommentServices.create(request.data, query_id)
             content = {
                 "message": 'Comment successfully created!',
                 "data": data
@@ -20,9 +20,9 @@ class CommentController():
             return Response('Error: ' + Exception, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     @api_view(["GET"])
-    def getAll(request):
+    def getAll(request, query_id):
         try:
-            data = CommentServices.getAll()
+            data = CommentServices.getAll(query_id)
             content = {
                 "message": 'Comments successfully retrieved!',
                 "data": data

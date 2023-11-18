@@ -23,4 +23,5 @@ urlpatterns = [
     path('api/', include('prueba2db.routes.User')),
     path('api/', include('prueba2db.routes.Query')),
     path('api/', include('prueba2db.routes.Data')),
+    path('api/', include('prueba2db.routes.Comment')),
 ]

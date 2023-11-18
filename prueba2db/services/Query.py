@@ -32,12 +32,11 @@ class QueryServices():
         if queryDB is None:
             raise Exception('Query does not exist!')
 
-        queryDB = queryDB
-        queryDB.query = query['query']
-        queryDB.title = query['title']
-        queryDB.description = query['description']
-        queryDB.save()
-        serializer = QuerySerializer(queryDB, many=False)
+        serializer = QuerySerializer(queryDB, data=query, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+        else:
+            raise Exception(serializer.errors)
         return serializer.data
 
     def delete(query_id):

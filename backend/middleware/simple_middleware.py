@@ -7,14 +7,14 @@ import environ
 env = environ.Env()
 environ.Env.read_env()
 
-public_routes = ['/api/user/username', '/api/data']
+private_methods = ['create', 'update', 'delete']
 
 
 def simple_middleware(get_response):
 
     def middleware(request):
 
-        if (request.path in public_routes):
+        if (request.method not in private_methods):
             return get_response(request)
 
         try:
