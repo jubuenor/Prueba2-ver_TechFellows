@@ -26,8 +26,8 @@ class CommentController():
 
             return Response(content, status=status.HTTP_201_CREATED)
 
-        except (Exception):
-            return Response('Error: ' + Exception, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        except Exception as error:
+            return Response('Error: ' + str(error), status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     # **
     # * @description Method to get all the Comments
     # * @param request Request received from the view
@@ -43,8 +43,8 @@ class CommentController():
                 "data": data
             }
             return Response(content, status=status.HTTP_200_OK)
-        except (Exception):
-            return Response('Error: ' + Exception, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        except Exception as error:
+            return Response('Error: ' + str(error), status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     # **
     # * @description Method to get a Comment by id
     # * @param request Request received from the view
@@ -61,8 +61,8 @@ class CommentController():
                 "data": data
             }
             return Response(content, status=status.HTTP_200_OK)
-        except (Exception):
-            return Response('Error: ' + Exception, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        except Exception as error:
+            return Response('Error: ' + str(error), status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     # **
     # * @description Method to update a Comment by id
     # * @param request Request received from the view
@@ -79,8 +79,8 @@ class CommentController():
                 "data": data
             }
             return Response(content, status=status.HTTP_200_OK)
-        except (Exception):
-            return Response('Error: ' + Exception, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        except Exception as error:
+            return Response('Error: ' + str(error), status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     # **
     # * @description Method to delete a Comment by id
@@ -97,5 +97,5 @@ class CommentController():
                 "data": data
             }
             return Response(content, status=status.HTTP_200_OK)
-        except (Exception):
-            return Response('Error: ' + Exception, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        except Exception as error:
+            return Response('Error: ' + str(error), status=status.HTTP_500_INTERNAL_SERVER_ERROR)

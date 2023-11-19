@@ -28,8 +28,8 @@ class QueryController():
                 "data": data
             }
             return Response(content, status=status.HTTP_201_CREATED)
-        except (Exception):
-            return Response('Error: ' + Exception, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        except Exception as error:
+            return Response('Error: ' + str(error), status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     # **
     # * @description Method to get all the Queries
@@ -46,8 +46,8 @@ class QueryController():
             }
             return Response(content, status=status.HTTP_200_OK)
 
-        except (Exception):
-            return Response('Error: ' + Exception, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        except Exception as error:
+            return Response('Error: ' + str(error), status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     # **
     # * @description Method to get a Query by id
     # * @param request Request received from the view
@@ -64,8 +64,8 @@ class QueryController():
                 "data": data
             }
             return Response(content, status=status.HTTP_200_OK)
-        except (Exception):
-            return Response('Error: ' + Exception, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        except Exception as error:
+            return Response('Error: ' + str(error), status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     # **
     # * @description Method to update a Query
     # * @param request Request received from the view
@@ -82,8 +82,8 @@ class QueryController():
                 "data": data
             }
             return Response(content, status=status.HTTP_200_OK)
-        except (Exception):
-            return Response('Error: ' + Exception, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        except Exception as error:
+            return Response('Error: ' + str(error), status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     # **
     # * @description Method to delete a Query
     # * @param request Request received from the view
@@ -100,8 +100,8 @@ class QueryController():
                 "data": data
             }
             return Response(content, status=status.HTTP_200_OK)
-        except (Exception):
-            return Response('Error: ' + Exception, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        except Exception as error:
+            return Response('Error: ' + str(error), status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     # **
     # * @description Method to check a Query
     # * @param request Request received from the view
@@ -117,5 +117,5 @@ class QueryController():
                 "data": data
             }
             return Response(content, status=status.HTTP_200_OK)
-        except (Exception):
-            return Response('Error: ' + Exception, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        except Exception as error:
+            return Response('Error: ' + str(error), status=status.HTTP_500_INTERNAL_SERVER_ERROR)
