@@ -1,0 +1,1 @@
+If something goes wrong, please run the activate.sh script again!!!!
