@@ -1,0 +1,26 @@
+name: Docker Images CI for GCHR prueba2_ver_techfellows
+
+on: push
+
+jobs:
+  build_and_publish_frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Build the frontend
+        run: |
+          docker login --username jubuenor --password ${{ secrets.GH_PAT }} ghcr.io
+          cd frontendProject
+          docker build --tag ghcr.io/jubuenor/prueba2_ver_techfellows/frontend:latest .
+          docker push ghcr.io/jubuenor/prueba2_ver_techfellows/frontend:latest
+
+  build_and_publish_backend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Build the backend
+        run: |
+          docker login --username jubuenor --password ${{ secrets.GH_PAT }} ghcr.io
+          cd backendProject
+          docker build --tag ghcr.io/jubuenor/prueba2_ver_techfellows/backend:latest .
+          docker push ghcr.io/jubuenor/prueba2_ver_techfellows/backend:latest

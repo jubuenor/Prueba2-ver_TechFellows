@@ -9,6 +9,7 @@ media
 # Google bigquery
 
 /backend/credentials.json
+backend/credentials.json
 
 # Backup files # 
 *.bak 
