@@ -27,3 +27,5 @@ Enjoy our application!
 The application is also responsive.
 
 Juan Andres Bueno.
+
+Check out this video for a cool tutorial! https://www.youtube.com/watch?v=Hppwh_2O7cQ
