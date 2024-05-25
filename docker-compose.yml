@@ -1,17 +1,24 @@
 services:
   prueba2-db:
-    image: postgres
+    image: postgres:16
+    restart: always
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
       - POSTGRES_DB=prueba2
     ports:
       - 5432:5432
-    volumes:
-      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready", "-d", "db_prod"]
+      interval: 20s
+      timeout: 20s
+      retries: 3
+    # volumes:
+    #   - pgdata:/var/lib/postgresql/data
 
   prueba2-back:
-    image: ghcr.io/jubuenor/prueba2_ver_techfellows/backend:latest
+    # image: ghcr.io/jubuenor/prueba2_ver_techfellows/backend:latest
+    image: crypto/backend
     command: >
       sh -c "python manage.py makemigrations &&
              python manage.py migrate &&
@@ -27,9 +34,11 @@ services:
     ports:
       - 8000:8000
     depends_on:
-      - prueba2-db
+      prueba2-db:
+        condition: service_healthy
   prueba2-front:
-    image: ghcr.io/jubuenor/prueba2_ver_techfellows/frontend:latest
+    # image: ghcr.io/jubuenor/prueba2_ver_techfellows/frontend:latest
+    image: crypto/frontend
     environment:
       - PORT=9000
       - BASE_URL=http://localhost:8000
@@ -38,5 +47,5 @@ services:
       - 9000:9000
     depends_on: 
       - prueba2-back
-volumes:
-  pgdata:
+# volumes:
+#   pgdata:
