@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Button, Form } from "react-bootstrap";
 import { Query } from "@/types/query";
 import { getUsernameCookie } from "@/pages/api/Token";
@@ -6,6 +6,9 @@ import Loading from "../Loading";
 import RegisterUsernameModal from "../RegisterUsernameModal";
 import { useMutation } from "react-query";
 import { saveQuery } from "@/pages/api/Query";
+import { Message } from "@/types/message";
+import MessageComponent from "../MessageModal";
+import { useRouter } from "next/navigation";
 
 // Functional component that renders the PostQuery component
 // query is the query to post
@@ -24,13 +27,34 @@ function PostQuery(
   const handleCloseModal = () => setShowModal(false);
   const handleShowModal = () => setShowModal(true);
 
+  const [showMessage, setShowMessage] = useState<boolean>(false);
+  const [messageOptions, setMessageOptions] = useState<Message>({
+    type: "success",
+    message: "",
+  });
+  const handleCloseMessage = () => setShowMessage(false);
+  const handleShowMessage = () => setShowMessage(true);
+
+  const router = useRouter();
+
   // Mutation to save the query
   const saveQueryMutation = useMutation({
     mutationFn: saveQuery,
     onSuccess: (response) => {
+      setMessageOptions({
+        type: "success",
+        message: "Query saved successfully",
+      });
+      handleShowMessage();
       setLoading(false);
+      router.push("/community");
     },
     onError: (error) => {
+      setMessageOptions({
+        type: "error",
+        message: "Error saving the query",
+      });
+      handleShowMessage();
       setLoading(false);
       console.log(error);
     },
@@ -62,6 +86,11 @@ function PostQuery(
   // Render the component
   return (
     <>
+      <MessageComponent
+        show={showMessage}
+        handleClose={handleCloseMessage}
+        options={messageOptions}
+      />
       <RegisterUsernameModal
         show={showModal}
         handleClose={handleCloseModal}
