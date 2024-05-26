@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { Form, Button } from "react-bootstrap";
+import React, { useEffect, useState } from "react";
+import { Button, Form } from "react-bootstrap";
 import { Query } from "@/types/query";
 import { getUsernameCookie } from "@/pages/api/Token";
 import Loading from "../Loading";
@@ -9,7 +9,9 @@ import { saveQuery } from "@/pages/api/Query";
 
 // Functional component that renders the PostQuery component
 // query is the query to post
-function PostQuery({ query }: { query: string }) {
+function PostQuery(
+  { query, setQuery }: { query: string; setQuery: (query: string) => void },
+) {
   const [loading, setLoading] = useState<boolean>(false);
   const [validated, setValidated] = useState(false);
   const [formData, setFormData] = useState<Query>({
@@ -63,7 +65,7 @@ function PostQuery({ query }: { query: string }) {
       <RegisterUsernameModal
         show={showModal}
         handleClose={handleCloseModal}
-      ></RegisterUsernameModal>
+      />
       {loading ? <Loading></Loading> : null}
       <div className="ms-5">
         <h1>!Share your Query!</h1>
@@ -98,7 +100,16 @@ function PostQuery({ query }: { query: string }) {
               Description is required
             </Form.Control.Feedback>
           </Form.Group>
-          <Button type="submit">Share</Button>
+          <div className="d-flex">
+            <Button type="submit">Share</Button>
+            <Button
+              className="ms-2"
+              onClick={() => setQuery("")}
+              variant="danger"
+            >
+              New Query
+            </Button>
+          </div>
         </Form>
       </div>
     </>

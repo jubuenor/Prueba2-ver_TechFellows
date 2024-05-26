@@ -1,17 +1,17 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
 import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
   BarElement,
+  CategoryScale,
+  Chart as ChartJS,
+  Colors,
+  Legend,
+  LinearScale,
   Title,
   Tooltip,
-  Legend,
-  Colors,
 } from "chart.js";
 import { Bar } from "react-chartjs-2";
-import { Form, Col, Row } from "react-bootstrap";
+import { Col, Form, Row } from "react-bootstrap";
 import { Results } from "@/types/query";
 import PostQuery from "./PostQuery";
 import { useGlobalStore } from "@/pages/api/Global";
@@ -25,7 +25,7 @@ ChartJS.register(
   Title,
   Tooltip,
   Legend,
-  Colors
+  Colors,
 );
 // Functional component that renders the ChartVisualizer component
 function ChartVisualizer({
@@ -34,12 +34,14 @@ function ChartVisualizer({
   series,
   years,
   query,
+  setQuery,
 }: {
   results: Results;
   countries: string[];
   series: string[];
   years: number[];
   query: string;
+  setQuery: (query: string) => void;
 }) {
   // Load the global data from the global store
   const globalData = useGlobalStore((state) => state.data);
@@ -82,7 +84,7 @@ function ChartVisualizer({
       key={index}
       serie={serie}
       description={globalData?.series[serie] ?? ""}
-    ></ChartInfo>
+    />
   ));
   // Render the component
   return (
@@ -101,7 +103,7 @@ function ChartVisualizer({
         <div className="mt-3">{renderSeriesInfo}</div>
       </Col>
       <Col md={6}>
-        <PostQuery query={query}></PostQuery>
+        <PostQuery query={query} setQuery={setQuery}></PostQuery>
       </Col>
     </Row>
   );

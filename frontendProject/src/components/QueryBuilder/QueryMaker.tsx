@@ -69,139 +69,150 @@ function QueryMaker() {
       {loading && <Loading></Loading>}
 
       <div>
-        {query === "" ? (
-          <>
-            <Accordion>
-              <Accordion.Item eventKey="0">
-                <Accordion.Header>
-                  {selectedCountries.length === 0 ? (
-                    <span className="me-3">
-                      <RiErrorWarningLine
-                        size={20}
-                        color="orange"
-                      ></RiErrorWarningLine>
+        {query === ""
+          ? (
+            <>
+              <Accordion>
+                <Accordion.Item eventKey="0">
+                  <Accordion.Header>
+                    {selectedCountries.length === 0
+                      ? (
+                        <span className="me-3">
+                          <RiErrorWarningLine
+                            size={20}
+                            color="orange"
+                          >
+                          </RiErrorWarningLine>
+                        </span>
+                      )
+                      : (
+                        <span className="me-3">
+                          <BsFillCheckCircleFill
+                            size={20}
+                            color="green"
+                          >
+                          </BsFillCheckCircleFill>
+                        </span>
+                      )}
+                    Countries
+                    <span className="ms-2">
+                      <BiWorld size={20} color="dodgerblue"></BiWorld>
                     </span>
-                  ) : (
-                    <span className="me-3">
-                      <BsFillCheckCircleFill
+                  </Accordion.Header>
+                  <Accordion.Body>
+                    <CountrySelector
+                      selectedCountries={selectedCountries}
+                      setSelectedCountries={setSelectedCountries}
+                    />
+                  </Accordion.Body>
+                </Accordion.Item>
+                <Accordion.Item eventKey="1">
+                  <Accordion.Header>
+                    {selectedSeries.length === 0
+                      ? (
+                        <span className="me-3">
+                          <RiErrorWarningLine
+                            size={20}
+                            color="orange"
+                          >
+                          </RiErrorWarningLine>
+                        </span>
+                      )
+                      : (
+                        <span className="me-3">
+                          <BsFillCheckCircleFill
+                            size={20}
+                            color="green"
+                          >
+                          </BsFillCheckCircleFill>
+                        </span>
+                      )}
+                    Series
+                    <span className="ms-2">
+                      <AiFillDatabase
                         size={20}
-                        color="green"
-                      ></BsFillCheckCircleFill>
+                        color="dodgerblue"
+                      >
+                      </AiFillDatabase>
                     </span>
-                  )}
-                  Countries
-                  <span className="ms-2">
-                    <BiWorld size={20} color="dodgerblue"></BiWorld>
-                  </span>
-                </Accordion.Header>
-                <Accordion.Body>
-                  <CountrySelector
-                    selectedCountries={selectedCountries}
-                    setSelectedCountries={setSelectedCountries}
-                  ></CountrySelector>
-                </Accordion.Body>
-              </Accordion.Item>
-              <Accordion.Item eventKey="1">
-                <Accordion.Header>
-                  {selectedSeries.length === 0 ? (
-                    <span className="me-3">
-                      <RiErrorWarningLine
+                  </Accordion.Header>
+                  <Accordion.Body>
+                    <SerieSelector
+                      selectedSeries={selectedSeries}
+                      setSelectedSeries={setSelectedSeries}
+                    />
+                  </Accordion.Body>
+                </Accordion.Item>
+                <Accordion.Item eventKey="2">
+                  <Accordion.Header>
+                    {selectedYears.years.length === 0
+                      ? (
+                        <span className="me-3">
+                          <RiErrorWarningLine
+                            size={20}
+                            color="orange"
+                          >
+                          </RiErrorWarningLine>
+                        </span>
+                      )
+                      : (
+                        <span className="me-3">
+                          <BsFillCheckCircleFill
+                            size={20}
+                            color="green"
+                          >
+                          </BsFillCheckCircleFill>
+                        </span>
+                      )}
+                    Years
+                    <span className="ms-2">
+                      <BsCalendarWeek
                         size={20}
-                        color="orange"
-                      ></RiErrorWarningLine>
+                        color="dodgerblue"
+                      >
+                      </BsCalendarWeek>
                     </span>
-                  ) : (
-                    <span className="me-3">
-                      <BsFillCheckCircleFill
-                        size={20}
-                        color="green"
-                      ></BsFillCheckCircleFill>
-                    </span>
-                  )}
-                  Series
-                  <span className="ms-2">
-                    <AiFillDatabase
-                      size={20}
-                      color="dodgerblue"
-                    ></AiFillDatabase>
-                  </span>
-                </Accordion.Header>
-                <Accordion.Body>
-                  <SerieSelector
-                    selectedSeries={selectedSeries}
-                    setSelectedSeries={setSelectedSeries}
-                  ></SerieSelector>
-                </Accordion.Body>
-              </Accordion.Item>
-              <Accordion.Item eventKey="2">
-                <Accordion.Header>
-                  {selectedYears.years.length === 0 ? (
-                    <span className="me-3">
-                      <RiErrorWarningLine
-                        size={20}
-                        color="orange"
-                      ></RiErrorWarningLine>
-                    </span>
-                  ) : (
-                    <span className="me-3">
-                      <BsFillCheckCircleFill
-                        size={20}
-                        color="green"
-                      ></BsFillCheckCircleFill>
-                    </span>
-                  )}
-                  Years
-                  <span className="ms-2">
-                    <BsCalendarWeek
-                      size={20}
-                      color="dodgerblue"
-                    ></BsCalendarWeek>
-                  </span>
-                </Accordion.Header>
-                <Accordion.Body>
-                  <YearSelector
-                    selectedYears={selectedYears}
-                    setSelectedYears={setSelectedYears}
-                  ></YearSelector>
-                </Accordion.Body>
-              </Accordion.Item>
-            </Accordion>
+                  </Accordion.Header>
+                  <Accordion.Body>
+                    <YearSelector
+                      selectedYears={selectedYears}
+                      setSelectedYears={setSelectedYears}
+                    />
+                  </Accordion.Body>
+                </Accordion.Item>
+              </Accordion>
 
-            <div className="mt-4">
-              <Button
-                onClick={handleRunQuery}
-                disabled={
-                  selectedCountries.length === 0 ||
-                  selectedSeries.length === 0 ||
-                  selectedYears.years.length === 0
+              <div className="mt-4">
+                <Button
+                  onClick={handleRunQuery}
+                  disabled={selectedCountries.length === 0 ||
+                      selectedSeries.length === 0 ||
+                      selectedYears.years.length === 0
                     ? true
-                    : false
-                }
-              >
-                Run Query
-              </Button>
+                    : false}
+                >
+                  Run Query
+                </Button>
+              </div>
+            </>
+          )
+          : (
+            <div>
+              <ChartVisualizer
+                results={results}
+                years={selectedYears.manual ? selectedYears.years : Array.from(
+                  {
+                    length: selectedYears.years[1] - selectedYears.years[0],
+                  },
+                  (value, index) => selectedYears.years[0] + index,
+                )}
+                countries={selectedCountries}
+                series={selectedSeries}
+                query={query}
+                setQuery={setQuery}
+              />
             </div>
-          </>
-        ) : (
-          <div>
-            <ChartVisualizer
-              results={results}
-              years={
-                selectedYears.manual
-                  ? selectedYears.years
-                  : Array.from(
-                      {
-                        length: selectedYears.years[1] - selectedYears.years[0],
-                      },
-                      (value, index) => selectedYears.years[0] + index
-                    )
-              }
-              countries={selectedCountries}
-              series={selectedSeries}
-              query={query}
-            ></ChartVisualizer>
-          </div>
-        )}
+          )}
       </div>
     </>
   );
