@@ -10,8 +10,8 @@ services:
       - 5432:5432
     healthcheck:
       test: ["CMD-SHELL", "pg_isready", "-d", "db_prod"]
-      interval: 20s
-      timeout: 20s
+      interval: 5s
+      timeout: 5s
       retries: 3
     # volumes:
     #   - pgdata:/var/lib/postgresql/data
