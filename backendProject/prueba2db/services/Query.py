@@ -3,8 +3,8 @@ from backend.serializers import QuerySerializer
 from google.cloud import bigquery
 import json
 import logging
-logger = logging.getLogger("mylogger")
-logger.info("Simple info")
+from loguru import logger
+import sys
 
 client = bigquery.Client()
 
@@ -21,7 +21,9 @@ class QueryServices():
     # * @param query Query to create
     # * @return Query created
     # **
+    @logger.catch
     def create(query):
+        logger.debug('Creating query...')
         query = Query(query=query['query'], description=query['description'],
                       title=query['title'], username=query['username'])
         query.save()
@@ -32,7 +34,9 @@ class QueryServices():
     # * @description Method to get all the Queries
     # * @return Queries
     # **
+    @logger.catch
     def getAll():
+        logger.debug('Getting all queries...')
         queries = Query.objects.all().order_by('-date')
         serializer = QuerySerializer(queries, many=True)
         return serializer.data
@@ -42,9 +46,12 @@ class QueryServices():
     # * @param query_id Id of the Query to get
     # * @return Query
     # **
+    @logger.catch
     def get(query_id):
+        logger.debug('Getting query by id...')
         query = Query.objects.get(id=query_id)
         if query is None:
+            logger.error('Query does not exist')
             raise Exception('Query does not exist!')
         serializer = QuerySerializer(query, many=False)
         return serializer.data
@@ -55,9 +62,12 @@ class QueryServices():
     # * @return Query updated
     # **
 
+    @logger.catch
     def update(query_id, query):
+        logger.debug('Updating query...')
         queryDB = Query.objects.get(id=query_id)
         if queryDB is None:
+            logger.error('Query does not exist')
             raise Exception('Query does not exist!')
 
         serializer = QuerySerializer(queryDB, data=query, partial=True)
@@ -72,9 +82,12 @@ class QueryServices():
     # * @return Query deleted
     # **
 
+    @logger.catch
     def delete(query_id):
+        logger.debug('Deleting query...')
         queryDB = Query.objects.get(id=query_id)
         if queryDB is None:
+            logger.error('Query does not exist')
             raise Exception('Query does not exist!')
 
         queryDB = queryDB
@@ -87,10 +100,12 @@ class QueryServices():
     # * @return Results of the Query
     # **
 
+    @logger.catch
     def checkQuery(query):
         # Check if query exists
-
+        logger.debug('Checking query...')
         if query is None:
+            logger.error('Query does not exist')
             raise Exception('Query does not exist!')
 
         # Check if query is valid
@@ -113,17 +128,9 @@ class QueryServices():
         QUERY = ""
         job_config = {}
 
-        yearsQuery = ""
-        # if manual:
-        #     years = ','.join(str(e) for e in years)
-        #     yearsQuery = f"IN ({years})"
-        # else:
-        #     years = ' AND '.join(str(e) for e in years)
-        #     yearsQuery = f"BETWEEN {years}"
         
         if manual:
-            # years = ','.join(str(e) for e in years)
-            # logger.warning(years)
+            logger.debug("Selected manual years for query")
             QUERY = f"""
             SELECT country_code, indicator_code, year, value
             FROM bigquery-public-data.world_bank_intl_education.international_education
@@ -138,15 +145,14 @@ class QueryServices():
                 ]
             )
         else:
+            logger.debug("Selected slider years for query")
             QUERY = f"""
             SELECT country_code, indicator_code, year, value
             FROM bigquery-public-data.world_bank_intl_education.international_education
             WHERE country_code IN UNNEST(SPLIT(@countries, ',')) AND indicator_code IN UNNEST(SPLIT(@series, ',')) AND year BETWEEN @year1 AND @year2
             ORDER BY country_code , indicator_code LIMIT 1000 
             """
-            # logger.warning(years)
-            # logger.warning(years[0])
-            # logger.warning(years[1])
+
             job_config = bigquery.QueryJobConfig(
                 query_parameters=[
                     bigquery.ScalarQueryParameter("countries", "STRING", countries),
@@ -174,7 +180,7 @@ class QueryServices():
             results[row.country_code][row.indicator_code][row.year] = row.value
 
         # Return results
-
+        logger.success('Query executed successfully')
         return {
             "query": json.dumps(query),
             "results": results,

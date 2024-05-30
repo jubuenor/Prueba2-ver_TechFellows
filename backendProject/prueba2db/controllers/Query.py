@@ -2,6 +2,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from prueba2db.services.Query import QueryServices
 from rest_framework import status
+from loguru import logger
 
 # **
 # * Class QueryController
@@ -29,6 +30,7 @@ class QueryController():
             }
             return Response(content, status=status.HTTP_201_CREATED)
         except Exception as error:
+            logger.critical('Error: ' + str(error))
             return Response('Error: ' + str(error), status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     # **
@@ -47,6 +49,7 @@ class QueryController():
             return Response(content, status=status.HTTP_200_OK)
 
         except Exception as error:
+            logger.critical('Error: ' + str(error))
             return Response('Error: ' + str(error), status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     # **
     # * @description Method to get a Query by id
@@ -65,6 +68,7 @@ class QueryController():
             }
             return Response(content, status=status.HTTP_200_OK)
         except Exception as error:
+            logger.critical('Error: ' + str(error))
             return Response('Error: ' + str(error), status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     # **
     # * @description Method to update a Query
@@ -83,6 +87,7 @@ class QueryController():
             }
             return Response(content, status=status.HTTP_200_OK)
         except Exception as error:
+            logger.critical('Error: ' + str(error))
             return Response('Error: ' + str(error), status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     # **
     # * @description Method to delete a Query
@@ -101,6 +106,7 @@ class QueryController():
             }
             return Response(content, status=status.HTTP_200_OK)
         except Exception as error:
+            logger.critical('Error: ' + str(error))
             return Response('Error: ' + str(error), status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     # **
     # * @description Method to check a Query
@@ -118,4 +124,5 @@ class QueryController():
             }
             return Response(content, status=status.HTTP_200_OK)
         except Exception as error:
+            logger.critical('Error' + str(error))
             return Response('Error: ' + str(error), status=status.HTTP_500_INTERNAL_SERVER_ERROR)

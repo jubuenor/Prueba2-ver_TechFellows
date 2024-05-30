@@ -13,6 +13,9 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 from pathlib import Path
 import environ
 import os
+from dj_easy_log import load_loguru
+from loguru import logger
+import sys
 
 os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "backend/credentials.json"
 
@@ -158,3 +161,8 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+load_loguru(globals())
+log_format = "<blue>{time:YYYY-MM-DD}</blue> <blue>{time:HH:mm:ss}</blue> | <magenta>{name}:{line}</magenta> | <level>{level}</level> - <level>{message}</level>"
+logger.remove()
+logger.add(sys.stdout, colorize=True, format=log_format)
+logger.add("audit_logs.log", format=log_format, colorize=False, backtrace=True, diagnose=True)
