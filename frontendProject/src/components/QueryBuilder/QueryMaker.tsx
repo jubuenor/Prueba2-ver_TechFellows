@@ -198,14 +198,12 @@ function QueryMaker() {
               </div>
 
               <div className="mt-4">
-              <Button
+                <Button
                   onClick={handleRunQuery}
-                  disabled={
-                    selectedCountries.length === 0 ||
+                  disabled={selectedCountries.length === 0 ||
                     selectedSeries.length === 0 ||
                     selectedYears.years.length === 0 ||
-                    !recaptchaToken
-                  }
+                    !recaptchaToken}
                 >
                   Run Query
                 </Button>

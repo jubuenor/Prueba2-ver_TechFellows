@@ -73,7 +73,13 @@ function ChartVisualizer({
     const newData = series.map((serie) => {
       return {
         label: serie,
-        data: years.map((year) => results[selectedCountry][serie][year] || 0),
+        data: years.map((year) => {
+          try {
+            return results[selectedCountry][serie][year] || 0;
+          } catch (e) {
+            return 0;
+          }
+        }),
       };
     });
     setData(newData);
