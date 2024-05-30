@@ -7,8 +7,7 @@ import { QueryClient, QueryClientProvider } from "react-query";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 
 const queryClient = new QueryClient();
-const googleOAuthClientID = process.env.NEXT_PUBLIC_GOOGLE_OAUTH_CLIENT_ID ||
-  "";
+const googleOAuthClientID = process.env.NEXT_PUBLIC_GOOGLE_OAUTH_CLIENT_ID || "";
 
 export default function App({ Component, pageProps }: AppProps) {
   return (

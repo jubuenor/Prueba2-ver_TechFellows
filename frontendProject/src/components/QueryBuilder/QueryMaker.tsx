@@ -15,6 +15,7 @@ import { Results, Years } from "@/types/query";
 import ChartVisualizer from "./ChartVisualizer";
 import { getQueryStorage, removeQueryStorage } from "@/utils/storage";
 import ReCAPTCHA from "react-google-recaptcha";
+const recaptchaSiteKey = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || "";
 
 // Functional component that renders the QueryMaker component
 function QueryMaker() {
@@ -191,7 +192,7 @@ function QueryMaker() {
 
               <div className="mt-4">
                 <ReCAPTCHA
-                  sitekey="6Lcy9-wpAAAAACIcuS3WzhLGg8CoGT_X_PjR-4OP"
+                  sitekey={recaptchaSiteKey}
                   onChange={handleRecaptchaChange}
                 />
               </div>
