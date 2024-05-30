@@ -2,6 +2,9 @@ from prueba2db.models import Query
 from backend.serializers import QuerySerializer
 from google.cloud import bigquery
 import json
+import logging
+logger = logging.getLogger("mylogger")
+logger.info("Simple info")
 
 client = bigquery.Client()
 
@@ -100,34 +103,65 @@ class QueryServices():
             raise Exception('Years does not exist!')
 
         # Query format
+        
+        
 
-        countries = '","'.join(query['countries'])
-        series = '","'.join(query['series'])
+        countries = ','.join(query['countries'])
+        series = ','.join(query['series'])
         manual = query['years']['manual']
         years = query['years']['years']
+        QUERY = ""
+        job_config = {}
 
         yearsQuery = ""
+        # if manual:
+        #     years = ','.join(str(e) for e in years)
+        #     yearsQuery = f"IN ({years})"
+        # else:
+        #     years = ' AND '.join(str(e) for e in years)
+        #     yearsQuery = f"BETWEEN {years}"
+        
         if manual:
-            years = ','.join(str(e) for e in years)
-            yearsQuery = f"IN ({years})"
-        else:
-            years = ' AND '.join(str(e) for e in years)
-            yearsQuery = f"BETWEEN {years}"
-
-        # Create query for BigQuery
-
-        QUERY = f"""
+            # years = ','.join(str(e) for e in years)
+            # logger.warning(years)
+            QUERY = f"""
             SELECT country_code, indicator_code, year, value
             FROM bigquery-public-data.world_bank_intl_education.international_education
-            WHERE country_code IN ("{countries}") AND indicator_code IN ("{series}") AND year {yearsQuery}
+            WHERE country_code IN UNNEST(SPLIT(@countries, ',')) AND indicator_code IN UNNEST(SPLIT(@series, ',')) AND year IN UNNEST(@years)
             ORDER BY country_code , indicator_code LIMIT 1000 
             """
+            job_config = bigquery.QueryJobConfig(
+                query_parameters=[
+                    bigquery.ScalarQueryParameter("countries", "STRING", countries),
+                    bigquery.ScalarQueryParameter("series", "STRING", series),
+                    bigquery.ArrayQueryParameter("years", "INT64", years),
+                ]
+            )
+        else:
+            QUERY = f"""
+            SELECT country_code, indicator_code, year, value
+            FROM bigquery-public-data.world_bank_intl_education.international_education
+            WHERE country_code IN UNNEST(SPLIT(@countries, ',')) AND indicator_code IN UNNEST(SPLIT(@series, ',')) AND year BETWEEN @year1 AND @year2
+            ORDER BY country_code , indicator_code LIMIT 1000 
+            """
+            # logger.warning(years)
+            # logger.warning(years[0])
+            # logger.warning(years[1])
+            job_config = bigquery.QueryJobConfig(
+                query_parameters=[
+                    bigquery.ScalarQueryParameter("countries", "STRING", countries),
+                    bigquery.ScalarQueryParameter("series", "STRING", series),
+                    bigquery.ScalarQueryParameter("year1", "INT64", years[0]),
+                    bigquery.ScalarQueryParameter("year2", "INT64", years[1]),
+                ]
+            )
+             
 
         results = {}
 
         # Execute query
 
-        query_job = client.query(QUERY)
+        query_job = client.query(QUERY, job_config=job_config)
         rows = query_job.result()
 
         # Format results in a dictionary
