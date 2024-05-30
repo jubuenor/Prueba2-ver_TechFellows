@@ -14,6 +14,7 @@ import Loading from "../Loading";
 import { Results, Years } from "@/types/query";
 import ChartVisualizer from "./ChartVisualizer";
 import { getQueryStorage, removeQueryStorage } from "@/utils/storage";
+import ReCAPTCHA from "react-google-recaptcha";
 
 // Functional component that renders the QueryMaker component
 function QueryMaker() {
@@ -27,6 +28,7 @@ function QueryMaker() {
   const [loading, setLoading] = useState<boolean>(false);
   const [results, setResults] = useState<Results>({});
   const [query, setQuery] = useState<string>("");
+  const [recaptchaToken, setRecaptchaToken] = useState<string | null>(null);
 
   // useEffect hook to load the query from the storage
   useEffect(() => {
@@ -61,6 +63,11 @@ function QueryMaker() {
       series: selectedSeries,
       years: selectedYears,
     });
+  };
+
+  // Handle the Captcha changes
+  const handleRecaptchaChange = (token: string | null) => {
+    setRecaptchaToken(token);
   };
 
   // Render the component
@@ -183,13 +190,21 @@ function QueryMaker() {
               </Accordion>
 
               <div className="mt-4">
-                <Button
+                <ReCAPTCHA
+                  sitekey="6Lcy9-wpAAAAACIcuS3WzhLGg8CoGT_X_PjR-4OP"
+                  onChange={handleRecaptchaChange}
+                />
+              </div>
+
+              <div className="mt-4">
+              <Button
                   onClick={handleRunQuery}
-                  disabled={selectedCountries.length === 0 ||
-                      selectedSeries.length === 0 ||
-                      selectedYears.years.length === 0
-                    ? true
-                    : false}
+                  disabled={
+                    selectedCountries.length === 0 ||
+                    selectedSeries.length === 0 ||
+                    selectedYears.years.length === 0 ||
+                    !recaptchaToken
+                  }
                 >
                   Run Query
                 </Button>
