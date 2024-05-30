@@ -4,7 +4,7 @@ import cookie from "js-cookie";
 
 // Function to check the query
 export async function checkQuery(query: QueryCreate) {
-  const BASE_URL = process.env.BASE_URL ?? "http://localhost:8000";
+  const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL ?? "https://local.eduviz.com:8080";
   const token = cookie.get("username");
   const config = {
     headers: {
@@ -22,7 +22,7 @@ export async function checkQuery(query: QueryCreate) {
 
 // Function to save the query in the backend
 export async function saveQuery(query: Query) {
-  const BASE_URL = process.env.BASE_URL ?? "http://localhost:8000";
+  const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL ?? "https://local.eduviz.com:8080";
   const token = cookie.get("username");
   const config = {
     headers: {
@@ -37,7 +37,7 @@ export async function saveQuery(query: Query) {
 
 // Function to get all queries from the backend
 export async function getAllQueries() {
-  const BASE_URL = process.env.BASE_URL ?? "http://localhost:8000";
+  const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL ?? "https://local.eduviz.com:8080";
   return axios
     .get<{ message: string; data: Query[] }>(`${BASE_URL}/api/query/getAll`)
     .then((res) => res.data);

@@ -4,7 +4,7 @@ import { Comment } from "@/types/comments";
 
 // Function to get all comments from the backend
 export async function getAllComments(id: string) {
-  const BASE_URL = process.env.BASE_URL ?? "http://localhost:8000";
+  const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL ?? "https://local.eduviz.com:8080";
   return axios
     .get<{ message: string; data: Comment[] }>(
       `${BASE_URL}/api/comment/${id}/getAll`,
@@ -20,7 +20,7 @@ export async function createComment({
   id: string;
   comment: Comment;
 }) {
-  const BASE_URL = process.env.BASE_URL ?? "http://localhost:8000";
+  const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL ?? "https://local.eduviz.com:8080";
   const token = cookie.get("token");
   const config = {
     headers: {
