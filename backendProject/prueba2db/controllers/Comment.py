@@ -2,6 +2,7 @@ from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from prueba2db.services.Comment import CommentServices
+from loguru import logger
 
 # **
 # * Class CommentController
@@ -27,6 +28,7 @@ class CommentController():
             return Response(content, status=status.HTTP_201_CREATED)
 
         except Exception as error:
+            logger.critical('Error' + str(error))
             return Response('Error: ' + str(error), status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     # **
     # * @description Method to get all the Comments
@@ -44,6 +46,7 @@ class CommentController():
             }
             return Response(content, status=status.HTTP_200_OK)
         except Exception as error:
+            logger.critical('Error' + str(error))
             return Response('Error: ' + str(error), status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     # **
     # * @description Method to get a Comment by id
@@ -62,6 +65,7 @@ class CommentController():
             }
             return Response(content, status=status.HTTP_200_OK)
         except Exception as error:
+            logger.critical('Error' + str(error))
             return Response('Error: ' + str(error), status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     # **
     # * @description Method to update a Comment by id
@@ -80,6 +84,7 @@ class CommentController():
             }
             return Response(content, status=status.HTTP_200_OK)
         except Exception as error:
+            logger.critical('Error' + str(error))
             return Response('Error: ' + str(error), status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     # **
@@ -98,4 +103,5 @@ class CommentController():
             }
             return Response(content, status=status.HTTP_200_OK)
         except Exception as error:
+            logger.critical('Error' + str(error))
             return Response('Error: ' + str(error), status=status.HTTP_500_INTERNAL_SERVER_ERROR)

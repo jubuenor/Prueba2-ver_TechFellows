@@ -1,6 +1,9 @@
 name: Docker Images CI for GHCR prueba2_ver_techfellows
 
-on: push
+on: 
+  push:
+    branches:
+      - main
 
 jobs:
   build_and_publish_frontend:

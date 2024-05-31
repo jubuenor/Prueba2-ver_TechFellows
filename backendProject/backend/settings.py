@@ -13,6 +13,9 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 from pathlib import Path
 import environ
 import os
+from dj_easy_log import load_loguru
+from loguru import logger
+import sys
 
 os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "backend/credentials.json"
 
@@ -32,7 +35,10 @@ SECRET_KEY = env("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    "localhost",
+    "local.eduviz.com",
+        ]
 
 
 # Application definition
@@ -115,9 +121,27 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console'],
+            'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
+        },
+    },
+}
+
 CORS_ORIGIN_WHITELIST = (
     'http://localhost:3000',
     'http://localhost:9000',
+    'https://localhost',
+    'https://local.eduviz.com',
 )
 
 
@@ -142,3 +166,8 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+load_loguru(globals())
+log_format = "<blue>{time:YYYY-MM-DD}</blue> <blue>{time:HH:mm:ss}</blue> | <magenta>{name}:{line}</magenta> | <level>{level}</level> - <level>{message}</level>"
+logger.remove()
+logger.add(sys.stdout, colorize=True, format=log_format)
+logger.add("audit_logs.log", format=log_format, colorize=False, backtrace=True, diagnose=True)

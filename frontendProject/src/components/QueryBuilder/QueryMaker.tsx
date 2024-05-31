@@ -14,6 +14,8 @@ import Loading from "../Loading";
 import { Results, Years } from "@/types/query";
 import ChartVisualizer from "./ChartVisualizer";
 import { getQueryStorage, removeQueryStorage } from "@/utils/storage";
+import ReCAPTCHA from "react-google-recaptcha";
+const recaptchaSiteKey = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY || "";
 
 // Functional component that renders the QueryMaker component
 function QueryMaker() {
@@ -27,6 +29,7 @@ function QueryMaker() {
   const [loading, setLoading] = useState<boolean>(false);
   const [results, setResults] = useState<Results>({});
   const [query, setQuery] = useState<string>("");
+  const [recaptchaToken, setRecaptchaToken] = useState<string | null>(null);
 
   // useEffect hook to load the query from the storage
   useEffect(() => {
@@ -63,145 +66,167 @@ function QueryMaker() {
     });
   };
 
+  // Handle the Captcha changes
+  const handleRecaptchaChange = (token: string | null) => {
+    setRecaptchaToken(token);
+  };
+
   // Render the component
   return (
     <>
       {loading && <Loading></Loading>}
 
       <div>
-        {query === "" ? (
-          <>
-            <Accordion>
-              <Accordion.Item eventKey="0">
-                <Accordion.Header>
-                  {selectedCountries.length === 0 ? (
-                    <span className="me-3">
-                      <RiErrorWarningLine
-                        size={20}
-                        color="orange"
-                      ></RiErrorWarningLine>
+        {query === ""
+          ? (
+            <>
+              <Accordion>
+                <Accordion.Item eventKey="0">
+                  <Accordion.Header>
+                    {selectedCountries.length === 0
+                      ? (
+                        <span className="me-3">
+                          <RiErrorWarningLine
+                            size={20}
+                            color="orange"
+                          >
+                          </RiErrorWarningLine>
+                        </span>
+                      )
+                      : (
+                        <span className="me-3">
+                          <BsFillCheckCircleFill
+                            size={20}
+                            color="green"
+                          >
+                          </BsFillCheckCircleFill>
+                        </span>
+                      )}
+                    Countries
+                    <span className="ms-2">
+                      <BiWorld size={20} color="dodgerblue"></BiWorld>
                     </span>
-                  ) : (
-                    <span className="me-3">
-                      <BsFillCheckCircleFill
+                  </Accordion.Header>
+                  <Accordion.Body>
+                    <CountrySelector
+                      selectedCountries={selectedCountries}
+                      setSelectedCountries={setSelectedCountries}
+                    />
+                  </Accordion.Body>
+                </Accordion.Item>
+                <Accordion.Item eventKey="1">
+                  <Accordion.Header>
+                    {selectedSeries.length === 0
+                      ? (
+                        <span className="me-3">
+                          <RiErrorWarningLine
+                            size={20}
+                            color="orange"
+                          >
+                          </RiErrorWarningLine>
+                        </span>
+                      )
+                      : (
+                        <span className="me-3">
+                          <BsFillCheckCircleFill
+                            size={20}
+                            color="green"
+                          >
+                          </BsFillCheckCircleFill>
+                        </span>
+                      )}
+                    Series
+                    <span className="ms-2">
+                      <AiFillDatabase
                         size={20}
-                        color="green"
-                      ></BsFillCheckCircleFill>
+                        color="dodgerblue"
+                      >
+                      </AiFillDatabase>
                     </span>
-                  )}
-                  Countries
-                  <span className="ms-2">
-                    <BiWorld size={20} color="dodgerblue"></BiWorld>
-                  </span>
-                </Accordion.Header>
-                <Accordion.Body>
-                  <CountrySelector
-                    selectedCountries={selectedCountries}
-                    setSelectedCountries={setSelectedCountries}
-                  ></CountrySelector>
-                </Accordion.Body>
-              </Accordion.Item>
-              <Accordion.Item eventKey="1">
-                <Accordion.Header>
-                  {selectedSeries.length === 0 ? (
-                    <span className="me-3">
-                      <RiErrorWarningLine
+                  </Accordion.Header>
+                  <Accordion.Body>
+                    <SerieSelector
+                      selectedSeries={selectedSeries}
+                      setSelectedSeries={setSelectedSeries}
+                    />
+                  </Accordion.Body>
+                </Accordion.Item>
+                <Accordion.Item eventKey="2">
+                  <Accordion.Header>
+                    {selectedYears.years.length === 0
+                      ? (
+                        <span className="me-3">
+                          <RiErrorWarningLine
+                            size={20}
+                            color="orange"
+                          >
+                          </RiErrorWarningLine>
+                        </span>
+                      )
+                      : (
+                        <span className="me-3">
+                          <BsFillCheckCircleFill
+                            size={20}
+                            color="green"
+                          >
+                          </BsFillCheckCircleFill>
+                        </span>
+                      )}
+                    Years
+                    <span className="ms-2">
+                      <BsCalendarWeek
                         size={20}
-                        color="orange"
-                      ></RiErrorWarningLine>
+                        color="dodgerblue"
+                      >
+                      </BsCalendarWeek>
                     </span>
-                  ) : (
-                    <span className="me-3">
-                      <BsFillCheckCircleFill
-                        size={20}
-                        color="green"
-                      ></BsFillCheckCircleFill>
-                    </span>
-                  )}
-                  Series
-                  <span className="ms-2">
-                    <AiFillDatabase
-                      size={20}
-                      color="dodgerblue"
-                    ></AiFillDatabase>
-                  </span>
-                </Accordion.Header>
-                <Accordion.Body>
-                  <SerieSelector
-                    selectedSeries={selectedSeries}
-                    setSelectedSeries={setSelectedSeries}
-                  ></SerieSelector>
-                </Accordion.Body>
-              </Accordion.Item>
-              <Accordion.Item eventKey="2">
-                <Accordion.Header>
-                  {selectedYears.years.length === 0 ? (
-                    <span className="me-3">
-                      <RiErrorWarningLine
-                        size={20}
-                        color="orange"
-                      ></RiErrorWarningLine>
-                    </span>
-                  ) : (
-                    <span className="me-3">
-                      <BsFillCheckCircleFill
-                        size={20}
-                        color="green"
-                      ></BsFillCheckCircleFill>
-                    </span>
-                  )}
-                  Years
-                  <span className="ms-2">
-                    <BsCalendarWeek
-                      size={20}
-                      color="dodgerblue"
-                    ></BsCalendarWeek>
-                  </span>
-                </Accordion.Header>
-                <Accordion.Body>
-                  <YearSelector
-                    selectedYears={selectedYears}
-                    setSelectedYears={setSelectedYears}
-                  ></YearSelector>
-                </Accordion.Body>
-              </Accordion.Item>
-            </Accordion>
+                  </Accordion.Header>
+                  <Accordion.Body>
+                    <YearSelector
+                      selectedYears={selectedYears}
+                      setSelectedYears={setSelectedYears}
+                    />
+                  </Accordion.Body>
+                </Accordion.Item>
+              </Accordion>
 
-            <div className="mt-4">
-              <Button
-                onClick={handleRunQuery}
-                disabled={
-                  selectedCountries.length === 0 ||
-                  selectedSeries.length === 0 ||
-                  selectedYears.years.length === 0
-                    ? true
-                    : false
-                }
-              >
-                Run Query
-              </Button>
+              <div className="mt-4">
+                <ReCAPTCHA
+                  sitekey={recaptchaSiteKey}
+                  onChange={handleRecaptchaChange}
+                />
+              </div>
+
+              <div className="mt-4">
+                <Button
+                  onClick={handleRunQuery}
+                  disabled={selectedCountries.length === 0 ||
+                    selectedSeries.length === 0 ||
+                    selectedYears.years.length === 0 ||
+                    !recaptchaToken}
+                >
+                  Run Query
+                </Button>
+              </div>
+            </>
+          )
+          : (
+            <div>
+              <ChartVisualizer
+                results={results}
+                years={selectedYears.manual ? selectedYears.years : Array.from(
+                  {
+                    length: selectedYears.years[1] - selectedYears.years[0],
+                  },
+                  (value, index) => selectedYears.years[0] + index,
+                )}
+                countries={selectedCountries}
+                series={selectedSeries}
+                query={query}
+                setQuery={setQuery}
+              />
             </div>
-          </>
-        ) : (
-          <div>
-            <ChartVisualizer
-              results={results}
-              years={
-                selectedYears.manual
-                  ? selectedYears.years
-                  : Array.from(
-                      {
-                        length: selectedYears.years[1] - selectedYears.years[0],
-                      },
-                      (value, index) => selectedYears.years[0] + index
-                    )
-              }
-              countries={selectedCountries}
-              series={selectedSeries}
-              query={query}
-            ></ChartVisualizer>
-          </div>
-        )}
+          )}
       </div>
     </>
   );

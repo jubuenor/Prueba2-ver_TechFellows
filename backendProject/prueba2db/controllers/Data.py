@@ -2,6 +2,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from prueba2db.services.Data import DataServices
 from rest_framework import status
+from loguru import logger
 
 # **
 # * Class QueryController
@@ -26,4 +27,5 @@ class DataController():
             return Response(content, status=status.HTTP_200_OK)
 
         except (Exception):
+            logger.critical('Error' + str(error))
             return Response('Error: ' + Exception, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

@@ -1,5 +1,6 @@
 from prueba2db.models import Comment, Query, Query_Comment
 from backend.serializers import CommentSerializer
+from loguru import logger
 
 # **
 # * Class CommentServices
@@ -15,9 +16,12 @@ class CommentServices():
     # * @return Comment created
     # **
 
+    @logger.catch
     def create(comment, query_id):
+        logger.debug('Creating comment query...')
         query = Query.objects.get(id=query_id)
         if query is None:
+            logger.error('Query not found')
             raise Exception('Query not found')
 
         comment = Comment.objects.create(
@@ -36,9 +40,13 @@ class CommentServices():
     # * @param query_id Id of the Query to get the Comments
     # * @return Comments of the Query
     # **
+    
+    @logger.catch
     def getAll(query_id):
+        logger.debug('Getting all comment queries...')
         query = Query.objects.get(id=query_id)
         if query is None:
+            logger.error('Query not found')
             raise Exception('Query not found')
 
         comments = Comment.objects.filter(
@@ -52,9 +60,12 @@ class CommentServices():
     # * @return Comment
     # **
 
+    @logger.catch
     def get(comment_id):
+        logger.debug('Getting comment by id...')
         comment = Comment.objects.get(id=comment_id)
         if comment is None:
+            logger.error('Comment not found')
             raise Exception('Comment not found')
 
         serializer = CommentSerializer(comment, many=False)
@@ -66,15 +77,19 @@ class CommentServices():
     # * @return Comment updated
     # **
 
+    @logger.catch
     def update(comment_id, comment):
+        logger.debug('Updating comment...')
         commentDB = Comment.objects.get(id=comment_id)
         if commentDB is None:
+            logger.error('Comment not found')
             raise Exception('Comment not found')
 
         serializer = CommentSerializer(commentDB, data=comment, partial=True)
         if serializer.is_valid():
             serializer.save()
         else:
+            logger.error('Serializer error')
             raise Exception(serializer.errors)
         return serializer.data
     # **
@@ -83,9 +98,12 @@ class CommentServices():
     # * @return Comment deleted
     # **
 
+    @logger.catch
     def delete(comment_id):
+        logger.debug('Deleting comment...')
         comment = Comment.objects.get(id=comment_id)
         if comment is None:
+            logger.error('Comment not found')
             raise Exception('Comment not found')
 
         comment.delete()

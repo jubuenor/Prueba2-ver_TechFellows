@@ -2,4 +2,3 @@ Dockerfile
 .dockerfile
 env
 **/__pycache__/
-*/credentials.json

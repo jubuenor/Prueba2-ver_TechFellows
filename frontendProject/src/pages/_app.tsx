@@ -3,9 +3,11 @@ import "@/styles/globals.css";
 import type { AppProps } from "next/app";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Head from "next/head";
-import { QueryClientProvider, QueryClient } from "react-query";
+import { QueryClient, QueryClientProvider } from "react-query";
+import { GoogleOAuthProvider } from "@react-oauth/google";
 
 const queryClient = new QueryClient();
+const googleOAuthClientID = process.env.NEXT_PUBLIC_GOOGLE_OAUTH_CLIENT_ID || "";
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
@@ -16,9 +18,11 @@ export default function App({ Component, pageProps }: AppProps) {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/logo.png" />
       </Head>
-      <QueryClientProvider client={queryClient}>
-        <Component {...pageProps} />
-      </QueryClientProvider>
+      <GoogleOAuthProvider clientId={googleOAuthClientID}>
+        <QueryClientProvider client={queryClient}>
+          <Component {...pageProps} />
+        </QueryClientProvider>
+      </GoogleOAuthProvider>
     </>
   );
 }

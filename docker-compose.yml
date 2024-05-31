@@ -1,17 +1,23 @@
 services:
-  prueba2-db:
-    image: postgres
+  eduviz_db:
+    image: postgres:16
+    restart: always
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
       - POSTGRES_DB=prueba2
     ports:
       - 5432:5432
-    volumes:
-      - pgdata:/var/lib/postgresql/data
-
-  prueba2-back:
-    image: ghcr.io/jubuenor/prueba2_ver_techfellows/backend:latest
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready", "-d", "db_prod"]
+      interval: 5s
+      timeout: 5s
+      retries: 3
+    # volumes:
+    #   - pgdata:/var/lib/postgresql/data
+  eduviz_back:
+    # image: ghcr.io/jubuenor/prueba2_ver_techfellows/backend:latest
+    image: crypto/backend
     command: >
       sh -c "python manage.py makemigrations &&
              python manage.py migrate &&
@@ -21,22 +27,44 @@ services:
       - DB_NAME=prueba2
       - DB_USER=postgres
       - DB_PASSWORD=postgres
-      - DB_HOST=prueba2-db
+      - DB_HOST=eduviz_db
       - DB_PORT=5432
       - DB_TABLE="bigquery-public-data.world_bank_intl_education.international_education"
     ports:
       - 8000:8000
     depends_on:
-      - prueba2-db
-  prueba2-front:
-    image: ghcr.io/jubuenor/prueba2_ver_techfellows/frontend:latest
+      eduviz_db:
+        condition: service_healthy
+  eduviz_front:
+    # image: ghcr.io/jubuenor/prueba2_ver_techfellows/frontend:latest
+    image: crypto/frontend
     environment:
       - PORT=9000
-      - BASE_URL=http://localhost:8000
+      - NEXT_PUBLIC_BASE_URL=https://local.eduviz.com:8080
       - SECRET_KEY=_IISKxfY6EP:j'4LDxNJz7Q9.W4Q|.h;5yvxlXO!+MArNaL!fz*(>_6Uy@Zl3.~
+      - NEXT_PUBLIC_GOOGLE_OAUTH_CLIENT_ID=564618507460-djmdl1bs0a0k5em41pig5pa38kfnk5cs.apps.googleusercontent.com
+      - NEXT_PUBLIC_RECAPTCHA_SITE_KEY=6Lcy9-wpAAAAACIcuS3WzhLGg8CoGT_X_PjR-4OP
     ports:
       - 9000:9000
     depends_on: 
-      - prueba2-back
-volumes:
-  pgdata:
+      - eduviz_back
+  proxy_front:
+    image: crypto/proxy-front
+    ports:
+      - 443:443
+    depends_on:
+      eduviz_back:
+        condition: service_started
+    # links:
+    #   - eduviz_front
+  proxy_back:
+    image: crypto/proxy-back
+    ports:
+      - 8080:8080
+    depends_on:
+      eduviz_back:
+        condition: service_started
+    # links:
+    #   - eduviz_front
+# volumes:
+#   pgdata:

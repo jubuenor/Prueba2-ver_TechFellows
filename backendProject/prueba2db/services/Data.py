@@ -1,4 +1,5 @@
 from google.cloud import bigquery
+from loguru import logger
 
 client = bigquery.Client()
 
@@ -13,10 +14,13 @@ class DataServices():
     # * @description Method to get the data needed for the app
     # * @return Data needed for the app
     # **
+    
+    @logger.catch
     def getData():
 
         # Query to get the countries and series
-
+        logger.debug('Getting countries and series...')
+        
         QUERY = """
             SELECT DISTINCT country_code, short_name
             FROM bigquery-public-data.world_bank_intl_education.country_summary
@@ -34,6 +38,10 @@ class DataServices():
 
         for row in rows:
             countries[row.country_code] = row.short_name
+        
+        logger.success('Successfully fetched countries and series')
+            
+        logger.debug('Getting series codes and indicator names...')
         QUERY = """
             SELECT DISTINCT series_code, indicator_name
             FROM bigquery-public-data.world_bank_intl_education.series_summary
@@ -51,6 +59,8 @@ class DataServices():
 
         for row in rows:
             series[row.series_code] = row.indicator_name
+        
+        logger.success('Successfully fetched series codes and indicator names')
 
         return {
             "countries": countries,

@@ -2,6 +2,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from prueba2db.services.User import UserServices
 from rest_framework import status
+from loguru import logger
 
 # **
 # * Class UserController
@@ -28,4 +29,5 @@ class UserController():
 
             return Response(content, status=status.HTTP_201_CREATED)
         except (Exception):
+            logger.critical('Error creating user')
             return Response('Error: ' + Exception, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
